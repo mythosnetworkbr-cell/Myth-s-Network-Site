@@ -8,6 +8,11 @@
     "scheme": "rpgram",
     "android": {"package":"com.rpgram.app","adaptiveIcon":{"backgroundColor":"#09090B"}},
     "ios": {"bundleIdentifier":"com.rpgram.app"},
-    "plugins": ["expo-image-picker"]
+    "plugins": ["expo-image-picker"],
+    "extra": {
+      "eas": {
+        "projectId": "SEU_PROJECT_ID"
+      }
+    }
   }
 }
