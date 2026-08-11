@@ -20,18 +20,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.13.0
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Setup Expo and EAS CLI
         run: npm install --global eas-cli@latest
 
+      - name: Validate Expo project
+        run: npx expo-doctor
+
       - name: Build APK with EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
         run: eas build --platform android --profile production-apk --non-interactive --wait
 
       - name: Download APK from EAS
@@ -39,7 +44,8 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           URL=$(eas build:list --platform android --profile production-apk --limit 1 --status finished --json --non-interactive | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const a=JSON.parse(s); if(!a[0]?.artifacts?.buildUrl) process.exit(1); console.log(a[0].artifacts.buildUrl)})")
-          curl -L "$URL" -o RPGRAMBR-production.apk
+          curl --fail --location "$URL" --output RPGRAMBR-production.apk
+          test -s RPGRAMBR-production.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
