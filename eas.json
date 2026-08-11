@@ -7,17 +7,20 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "environment": "development"
+      "environment": "development",
+      "node": "22.13.0"
     },
     "preview": {
       "distribution": "internal",
       "environment": "preview",
+      "node": "22.13.0",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
       "environment": "production",
+      "node": "22.13.0",
       "android": {
         "buildType": "app-bundle"
       }
