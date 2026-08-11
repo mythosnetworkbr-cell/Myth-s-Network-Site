@@ -6,12 +6,25 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "rpgram",
-    "android": {"package":"com.rpgram.app","adaptiveIcon":{"backgroundColor":"#09090B"}},
-    "ios": {"bundleIdentifier":"com.rpgram.app"},
-    "plugins": ["expo-image-picker"],
+
+    "android": {
+      "package": "com.rpgram.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#09090B"
+      }
+    },
+
+    "ios": {
+      "bundleIdentifier": "com.rpgram.app"
+    },
+
+    "plugins": [
+      "expo-image-picker"
+    ],
+
     "extra": {
       "eas": {
-        "projectId": "SEU_PROJECT_ID"
+        "projectId": "d02dd6bc-3716-4070-ae11-70e3a86bc93d"
       }
     }
   }
