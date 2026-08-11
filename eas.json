@@ -18,6 +18,14 @@
         "buildType": "apk"
       }
     },
+    "production-apk": {
+      "distribution": "internal",
+      "environment": "production",
+      "node": "22.13.0",
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {
       "environment": "production",
       "node": "22.13.0",
