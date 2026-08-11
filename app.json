@@ -6,11 +6,9 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "rpgram",
-    "icon": "./assets/icon.png",
     "android": {
       "package": "com.rpgram.app",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#09090B"
       }
     },
