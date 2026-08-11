@@ -19,13 +19,13 @@ create policy "comments readable" on public.comments for select using(true);crea
 create policy "follows readable" on public.follows for select using(true);create policy "own follows insert" on public.follows for insert with check(auth.uid()=follower_id);create policy "own follows delete" on public.follows for delete using(auth.uid()=follower_id);
 create policy "own notifications readable" on public.notifications for select using(auth.uid()=user_id);create policy "own notifications update" on public.notifications for update using(auth.uid()=user_id);
 create policy "conversation members readable" on public.conversation_members for select using(auth.uid()=user_id);
-create policy "conversation members insert" on public.conversation_members for insert with check(auth.uid()=user_id);
+create policy "conversation members insert" on public.conversation_members for insert with check(auth.uid()=user_id or exists(select 1 from public.conversation_members cm where cm.conversation_id=conversation_id and cm.user_id=auth.uid()));
 create policy "conversations member readable" on public.conversations for select using(exists(select 1 from public.conversation_members cm where cm.conversation_id=id and cm.user_id=auth.uid()));
-create policy "conversations member insert" on public.conversations for insert with check(true);
+create policy "conversations member insert" on public.conversations for insert with check(auth.uid() is not null);
 create policy "conversations member update" on public.conversations for update using(exists(select 1 from public.conversation_members cm where cm.conversation_id=id and cm.user_id=auth.uid()));
 create policy "messages member readable" on public.messages for select using(exists(select 1 from public.conversation_members cm where cm.conversation_id=conversation_id and cm.user_id=auth.uid()));
 create policy "messages own insert" on public.messages for insert with check(auth.uid()=sender_id and exists(select 1 from public.conversation_members cm where cm.conversation_id=conversation_id and cm.user_id=auth.uid()));
-create policy "messages own update" on public.messages for update using(auth.uid()=sender_id or exists(select 1 from public.conversation_members cm where cm.conversation_id=conversation_id and cm.user_id=auth.uid()));
+create policy "messages member update" on public.messages for update using(exists(select 1 from public.conversation_members cm where cm.conversation_id=conversation_id and cm.user_id=auth.uid()));
 
 insert into storage.buckets(id,name,public) values('rpgram-media','rpgram-media',true) on conflict(id) do nothing;
 create policy "media public read" on storage.objects for select using(bucket_id='rpgram-media');
@@ -33,4 +33,7 @@ create policy "media own upload" on storage.objects for insert with check(bucket
 create policy "media own update" on storage.objects for update using(bucket_id='rpgram-media' and auth.uid()::text=split_part(name,'/',1));
 create policy "media own delete" on storage.objects for delete using(bucket_id='rpgram-media' and auth.uid()::text=split_part(name,'/',1));
 
-alter publication supabase_realtime add table public.messages;
+do $$ begin
+  alter publication supabase_realtime add table public.messages;
+exception when duplicate_object then null;
+end $$;
