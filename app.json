@@ -6,22 +6,20 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "rpgram",
-
+    "icon": "./assets/icon.png",
     "android": {
       "package": "com.rpgram.app",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#09090B"
       }
     },
-
     "ios": {
       "bundleIdentifier": "com.rpgram.app"
     },
-
     "plugins": [
       "expo-image-picker"
     ],
-
     "extra": {
       "eas": {
         "projectId": "d02dd6bc-3716-4070-ae11-70e3a86bc93d"
