@@ -2,18 +2,18 @@
   "expo": {
     "name": "RPgram",
     "slug": "rpgram",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "rpgram",
     "splash": {
-      "backgroundColor": "#07070A",
+      "backgroundColor": "#09010F",
       "resizeMode": "contain"
     },
     "android": {
       "package": "com.rpgram.app",
       "adaptiveIcon": {
-        "backgroundColor": "#07070A",
+        "backgroundColor": "#6D28D9",
         "foregroundImage": "./assets/icon.png"
       }
     },
@@ -24,6 +24,11 @@
       "expo-image-picker"
     ],
     "extra": {
+      "brand": {
+        "name": "RPgram",
+        "company": "Mythøs Network",
+        "primaryColor": "#8B5CF6"
+      },
       "eas": {
         "projectId": "d02dd6bc-3716-4070-ae11-70e3a86bc93d"
       }
