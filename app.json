@@ -1,15 +1,20 @@
 {
   "expo": {
-    "name": "RPGRAM",
-    "slug": "mythos-networkbr",
-    "version": "1.0.0",
+    "name": "RPgram",
+    "slug": "rpgram",
+    "version": "1.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "rpgram",
+    "splash": {
+      "backgroundColor": "#07070A",
+      "resizeMode": "contain"
+    },
     "android": {
       "package": "com.rpgram.app",
       "adaptiveIcon": {
-        "backgroundColor": "#09090B"
+        "backgroundColor": "#07070A",
+        "foregroundImage": "./assets/icon.png"
       }
     },
     "ios": {
