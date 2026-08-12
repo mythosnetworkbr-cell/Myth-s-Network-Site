@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Deduplicate npm dependencies
+        run: npm dedupe --no-audit --no-fund
+
       - name: Setup Expo and EAS CLI
         run: npm install --global eas-cli@latest
 
