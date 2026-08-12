@@ -40,7 +40,7 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           test -n "$EXPO_TOKEN"
-          eas env:list --environment production --non-interactive
+          eas env:list production
 
       - name: Build APK with EAS
         env:
