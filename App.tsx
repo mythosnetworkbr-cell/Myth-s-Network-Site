@@ -1,3 +1,3 @@
-import RPGramApp from './src/RPGramApp';
+import RPgramPolished from './src/RPgramPolished';
 
-export default RPGramApp;
+export default RPgramPolished;
