@@ -1,21 +1,26 @@
 {
   "name": "rpgram",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "doctor": "npx expo-doctor"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.0",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@supabase/supabase-js": "^2.57.0",
     "expo": "^57.0.0",
+    "expo-auth-session": "~7.0.8",
     "expo-font": "~57.0.0",
     "expo-image-picker": "~57.0.5",
     "expo-status-bar": "~57.0.1",
+    "expo-web-browser": "~15.0.8",
     "react": "19.2.3",
     "react-native": "0.86.2",
     "react-native-url-polyfill": "^3.0.0"
