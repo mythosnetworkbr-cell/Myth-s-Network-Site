@@ -29,21 +29,18 @@ jobs:
       - name: Setup Expo and EAS CLI
         run: npm install --global eas-cli@latest
 
-      - name: Configure EAS production environment
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-        run: |
-          test -n "$SUPABASE_URL"
-          test -n "$SUPABASE_KEY"
-          eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value "$SUPABASE_URL" --environment production --visibility plaintext --force --non-interactive
-          eas env:create --name EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY --value "$SUPABASE_KEY" --environment production --visibility plaintext --force --non-interactive
-          echo "EAS production Supabase variables configured"
-          eas env:list --environment production --non-interactive
-
       - name: Validate Expo project
         run: npx expo-doctor
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Verify EAS production environment
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          test -n "$EXPO_TOKEN"
+          eas env:list --environment production --non-interactive
 
       - name: Build APK with EAS
         env:
@@ -65,5 +62,3 @@ jobs:
           path: RPGRAMBR-production.apk
           if-no-files-found: error
           retention-days: 30
-
-# Trigger fresh production build after Supabase environment fix.
