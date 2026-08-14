@@ -1,3 +1,3 @@
-import RPgramPolished from './src/RPgramPolished';
+import AuthGate from './src/AuthGate';
 
-export default RPgramPolished;
+export default AuthGate;
