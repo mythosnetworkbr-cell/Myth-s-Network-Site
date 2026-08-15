@@ -3,10 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Linking } from 'react-native';
 import { createClient } from '@supabase/supabase-js';
 
-// RPGRAM uses the user's active Supabase project. The publishable/anon key is safe
-// to ship in a mobile client; privileged service-role keys must never be embedded.
-const url = 'https://dsutlnmmhigqdtfinioo.supabase.co';
-const key = 'sb_publishable_0akcAyeHDoDhVu4PceMSLQ_mfh5JaxD';
+// RPgram uses the Mythøs Supabase project (rcjexjhziwcynsjmcdap).
+// Only the public/publishable key is embedded in the mobile app.
+const url = 'https://rcjexjhziwcynsjmcdap.supabase.co';
+const key = 'sb_publishable_5h0XO-uB9KL3CLYLRXm3Tg_V37WQggx';
 const redirectUri = 'rpgram://auth/callback';
 
 export const supabase = createClient(url, key, {
