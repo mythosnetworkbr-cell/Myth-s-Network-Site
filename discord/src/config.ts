@@ -11,8 +11,7 @@ export const config = {
   serverHost: process.env.SAMP_HOST ?? '',
   serverPort: Number(process.env.SAMP_PORT ?? 7777),
   adminRoleId: process.env.ADMIN_ROLE_ID ?? '',
+  whitelistRoleId: process.env.WHITELIST_ROLE_ID ?? '',
 };
 
-if (!config.token || !config.clientId) {
-  throw new Error('DISCORD_TOKEN e DISCORD_CLIENT_ID são obrigatórios.');
-}
+if (!config.token || !config.clientId) throw new Error('DISCORD_TOKEN e DISCORD_CLIENT_ID são obrigatórios.');
