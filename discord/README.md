@@ -1,34 +1,47 @@
 # Mythøs Network — Discord Bot
 
-Bot oficial do Discord da Mythøs Network.
+Bot oficial do Discord da Mythøs Network, isolado em `discord/` dentro deste repositório.
 
-## Estrutura
+## Sistemas
 
-Este bot fica isolado em `discord/` dentro do repositório `RPGRAMBR`, sem interferir no aplicativo existente.
+- Status online real do servidor SA-MP via consulta UDP.
+- `/server` e `/players` com jogadores, capacidade, gamemode e latência.
+- Tickets privados por usuário.
+- Moderação: `/clear`, `/kick`, `/ban`, `/warn`.
+- Persistência local de advertências: `/warnings` e `/clearwarnings`.
+- Whitelist: `/whitelist solicitar`, `/whitelist status`, aprovação e rejeição pela equipe.
+- Cargo automático de whitelist quando `WHITELIST_ROLE_ID` estiver configurado.
+- Logs de moderação, tickets e whitelist.
+- Slash commands registrados automaticamente no servidor de desenvolvimento ou globalmente.
+- Presença personalizada Mythøs Network | NYX Roleplay.
 
 ## Configuração
 
 1. Copie `.env.example` para `.env`.
-2. Crie uma aplicação/bot no Discord Developer Portal.
+2. Crie o bot no Discord Developer Portal.
 3. Preencha `DISCORD_TOKEN` e `DISCORD_CLIENT_ID`.
-4. Para desenvolvimento em um servidor específico, preencha `DISCORD_GUILD_ID`.
-5. Execute `npm install` e depois `npm run dev`.
-
-## Comandos iniciais
-
-- `/ping`
-- `/server`
-- `/players`
-- `/userinfo`
-- `/ticket`
-
-## Próximas integrações
-
-- Tickets reais com categorias e permissões.
-- Moderação e logs.
-- Cargos administrativos da Mythøs Network.
-- Consulta de jogadores do SAMP/Open.MP.
-- Integração com a NYX Roleplay.
-- Banco de dados para whitelist, contas e logs.
+4. Para registro imediato dos comandos, preencha `DISCORD_GUILD_ID`.
+5. Configure categoria de tickets, cargo de suporte, canal de logs e cargo de whitelist.
+6. Informe `SAMP_HOST` e `SAMP_PORT` para consulta do servidor.
+7. Execute `npm install` e `npm run build`.
+8. Execute `npm start`.
 
 Nunca coloque o token do bot no GitHub. Use somente variáveis de ambiente.
+
+## Estrutura
+
+```text
+discord/
+├── src/
+│   ├── commands.ts
+│   ├── config.ts
+│   ├── index.ts
+│   ├── server.ts
+│   ├── store.ts
+│   └── tickets.ts
+├── .env.example
+├── package.json
+└── tsconfig.json
+```
+
+O arquivo `data.json` é criado em runtime para persistir advertências e whitelist e não deve ser versionado.
