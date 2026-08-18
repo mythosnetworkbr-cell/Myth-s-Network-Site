@@ -1,0 +1,22 @@
+{
+  "name": "mythos-network-discord-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bot oficial do Discord da Mythøs Network",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.json",
+    "register": "tsx src/register-commands.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.9.2"
+  }
+}
