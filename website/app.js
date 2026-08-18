@@ -1,0 +1,1 @@
+document.querySelector('#login-form')?.addEventListener('submit',function(e){e.preventDefault();const m=document.querySelector('#message');if(m)m.textContent='Área de autenticação preparada para integração com o backend/Supabase.'});
