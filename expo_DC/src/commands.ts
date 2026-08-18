@@ -1,4 +1,5 @@
 import { PermissionFlagsBits, SlashCommandBuilder, ChannelType } from 'discord.js';
+import { TICKET_CATEGORIES } from './ticket-categories.js';
 
 const mod = (command: SlashCommandBuilder, permission: bigint) => command.setDefaultMemberPermissions(permission);
 const embedCommand = (name: 'aviso' | 'embed', description: string) => mod(new SlashCommandBuilder().setName(name).setDescription(description).addStringOption(o => o.setName('tipo').setDescription('Tipo do embed').setRequired(true).addChoices({ name: 'Anúncio', value: 'announcement' }, { name: 'Informação', value: 'info' }, { name: 'Sucesso', value: 'success' }, { name: 'Atenção', value: 'warning' }, { name: 'Alerta', value: 'error' })).addStringOption(o => o.setName('titulo').setDescription('Título').setRequired(true)).addStringOption(o => o.setName('mensagem').setDescription('Mensagem').setRequired(true)), PermissionFlagsBits.ManageMessages);
@@ -8,12 +9,12 @@ const setup = new SlashCommandBuilder().setName('config').setDescription('Config
   .addSubcommand(s => s.setName('saida').setDescription('Define canal de despedida.').addChannelOption(o => o.setName('canal').setDescription('Canal de saída').addChannelTypes(ChannelType.GuildText).setRequired(true)))
   .addSubcommand(s => s.setName('mensagens').setDescription('Define textos de entrada e saída.').addStringOption(o => o.setName('entrada').setDescription('Use {user}, {username}, {server}, {memberCount}')).addStringOption(o => o.setName('saida').setDescription('Use {user}, {username}, {server}, {memberCount}')))
   .addSubcommand(s => s.setName('ver').setDescription('Mostra a configuração atual.'));
+const ticketCommand = new SlashCommandBuilder().setName('ticket').setDescription('Abre um atendimento.').addStringOption(o => o.setName('categoria').setDescription('Escolha o tipo de atendimento').setRequired(true).addChoices(...Object.entries(TICKET_CATEGORIES).map(([value, item]) => ({ name: `${item.emoji} ${item.label}`.slice(0, 100), value }))));
 export const commands = [
   new SlashCommandBuilder().setName('ping').setDescription('Verifica se o bot está online.'),
   new SlashCommandBuilder().setName('server').setDescription('Mostra o status do servidor configurado.'),
   new SlashCommandBuilder().setName('players').setDescription('Mostra jogadores e capacidade do servidor.'),
-  new SlashCommandBuilder().setName('userinfo').setDescription('Mostra informações do usuário.'),
-  new SlashCommandBuilder().setName('ticket').setDescription('Abre um atendimento com a equipe.'),
+  new SlashCommandBuilder().setName('userinfo').setDescription('Mostra informações do usuário.'), ticketCommand,
   new SlashCommandBuilder().setName('close').setDescription('Fecha o ticket atual.'),
   embedCommand('aviso', 'Publica um aviso oficial em Embed.'), embedCommand('embed', 'Publica um Embed personalizado.'), setup,
   mod(new SlashCommandBuilder().setName('clear').setDescription('Apaga mensagens do canal.').addIntegerOption(o => o.setName('quantidade').setDescription('Quantidade (1-100)').setMinValue(1).setMaxValue(100).setRequired(true)), PermissionFlagsBits.ManageMessages),
