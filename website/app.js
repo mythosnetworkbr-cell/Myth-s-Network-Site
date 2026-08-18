@@ -1,6 +1,7 @@
 const SUPABASE_URL='https://rcjexjhziwcynsjmcdap.supabase.co';
 const SUPABASE_KEY='sb_publishable_OglouaI2szEvKmNvK3HEUQ_IOuHv-V-';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const DISCORD_FUNCTION='notify-discord-ticket';
 
 const $=s=>document.querySelector(s);
 const message=$('#message');
@@ -42,14 +43,21 @@ $('#ticket-form')?.addEventListener('submit',async e=>{
  out.textContent='Abrindo atendimento...';
  const {data:ticket,error}=await supabaseClient.from('support_tickets').insert({user_id:user.id,category:fd.get('category'),subject:fd.get('subject')}).select().single();
  if(error){out.textContent=error.message;return;}
- const {error:messageError}=await supabaseClient.from('support_ticket_messages').insert({ticket_id:ticket.id,user_id:user.id,body:fd.get('body')});
+ const body=String(fd.get('body')||'');
+ const {error:messageError}=await supabaseClient.from('support_ticket_messages').insert({ticket_id:ticket.id,user_id:user.id,body});
  if(messageError){out.textContent=messageError.message;return;}
- form.reset();out.textContent=`Ticket #${ticket.id} aberto com sucesso.`;
+
+ const {error:discordError}=await supabaseClient.functions.invoke(DISCORD_FUNCTION,{body:{ticket_id:ticket.id,category:fd.get('category'),subject:fd.get('subject')}});
+ form.reset();
+ out.textContent=discordError
+   ? `Ticket #${ticket.id} aberto. A notificação da Staff ficará pendente.`
+   : `Ticket #${ticket.id} aberto e enviado para a Staff.`;
 });
 
 async function loadLauncher(){
  const {data,error}=await supabaseClient.from('portal_launcher_versions').select('version,apk_url').eq('published',true).order('published_at',{ascending:false}).limit(1).maybeSingle();
  const version=$('#launcher-version'),link=$('#download-apk');
+ if(!version||!link)return;
  if(error||!data){version.textContent='Download oficial em preparação.';link.classList.add('disabled');return;}
  version.textContent=`Versão ${data.version}`;link.href=data.apk_url;link.target='_blank';
 }
