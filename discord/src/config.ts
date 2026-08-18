@@ -10,6 +10,7 @@ export const config = {
   logChannelId: process.env.LOG_CHANNEL_ID ?? '',
   serverHost: process.env.SAMP_HOST ?? '',
   serverPort: Number(process.env.SAMP_PORT ?? 7777),
+  adminRoleId: process.env.ADMIN_ROLE_ID ?? '',
 };
 
 if (!config.token || !config.clientId) {
