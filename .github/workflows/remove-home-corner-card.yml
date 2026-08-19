@@ -1,0 +1,38 @@
+name: Remove home corner card
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  remove-card:
+    if: ${{ !contains(github.event.head_commit.message, '[hero-card-removed]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove home hero card
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('App.web.tsx')
+          s = p.read_text(encoding='utf-8')
+          old = '''<div style={S.heroCard}><div style={S.cardTop}><span>MYTHØS / LIVE</span><span>01</span></div><div style={S.cityLogo}>MØ</div><h3>Roleplay sem limites.</h3><p>Construa sua carreira, sua organização e sua própria história.</p><div style={S.line}><span>STATUS</span><b>ONLINE</b></div><div style={S.line}><span>PLATAFORMA</span><b>ANDROID</b></div></div>'''
+          if old not in s:
+              raise SystemExit('Hero card block not found; no change made.')
+          p.write_text(s.replace(old, ''), encoding='utf-8')
+          PY
+
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add App.web.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: remove home corner card [hero-card-removed]"
+          git push
