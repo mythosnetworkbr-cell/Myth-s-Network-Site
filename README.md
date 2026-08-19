@@ -88,3 +88,5 @@ RPGRAMBR/
 ## 🔐 Segurança
 
 Nunca publique `.env`, senhas, tokens ou chaves privadas. O `.gitignore` já protege arquivos de ambiente.
+
+<!-- stable mobile web redeploy -->
