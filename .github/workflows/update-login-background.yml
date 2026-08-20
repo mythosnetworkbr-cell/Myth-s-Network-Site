@@ -1,0 +1,44 @@
+name: Update Mythos login background
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-login-background:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply GTA San Andreas mobile background
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('App.web.tsx')
+          s = p.read_text(encoding='utf-8')
+          old = "const LOGIN_BG='https://www.nightskyrp.eu/gta-v-gang-members-night-street-dark-purple.jpg';"
+          new = "const LOGIN_BG='https://wallpaper.forfun.com/fetch/31/319d98de418270ad20dbdf381c352f5f.jpeg';"
+          if old in s:
+              p.write_text(s.replace(old, new), encoding='utf-8')
+          PY
+          rm -f assets/login-background.jpg assets/login-background.jpg.b64 assets/login-background.txt assets/login-bg-source.txt assets/login-bg-note.txt assets/cleanup-needed.txt
+          rm -f assets/login-background.svg
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git add App.web.tsx assets
+          git commit -m 'feat: add GTA San Andreas login background'
+          git push
