@@ -1,0 +1,1 @@
+Login background asset is provided by the project owner.
