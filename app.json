@@ -2,13 +2,11 @@
   "expo": {
     "name": "Mythøs Network Samp",
     "slug": "mythos-network-samp",
-    "version": "1.3.3",
+    "version": "1.3.4",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "mythos",
-    "web": {
-      "favicon": "./assets/mythos-site-icon.svg"
-    },
+    "web": {},
     "plugins": [
       "expo-image-picker"
     ],
