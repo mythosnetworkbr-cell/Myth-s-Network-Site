@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "RPgram",
-    "slug": "rpgram",
+    "name": "Mythøs Network Samp",
+    "slug": "mythos-network-samp",
     "version": "1.3.1",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "scheme": "rpgram",
+    "scheme": "mythos",
     "icon": "./assets/icon.png",
     "android": {
-      "package": "com.rpgram.app",
+      "package": "com.mythos.network.samp",
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
@@ -16,17 +16,20 @@
       }
     },
     "ios": {
-      "bundleIdentifier": "com.rpgram.app",
+      "bundleIdentifier": "com.mythos.network.samp",
       "icon": "./assets/icon.png"
+    },
+    "web": {
+      "favicon": "./assets/mythos-site-icon.svg"
     },
     "plugins": [
       "expo-image-picker"
     ],
     "extra": {
       "brand": {
-        "name": "RPgram",
+        "name": "Mythøs Network Samp",
         "company": "Mythøs Network",
-        "primaryColor": "#8B5CF6"
+        "primaryColor": "#FF1744"
       },
       "eas": {
         "projectId": "d02dd6bc-3716-4070-ae11-70e3a86bc93d"
