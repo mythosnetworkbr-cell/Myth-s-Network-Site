@@ -4,7 +4,7 @@ import{supabase,MASTER_ADMIN_EMAIL,canManageRoles,listUsers,setUserRole}from'./l
 
 const APK='https://www.mediafire.com/file/nv1thw9hmk88kk9/MythosNetworkSAMP-release%25282%2529.apk/file?dkey=nv1thw9hmk88kk9';
 const DISCORD='https://discord.gg/vJb2Aqzda';
-const LOGIN_BG='https://www.nightskyrp.eu/gta-v-gang-members-night-street-dark-purple.jpg';
+const LOGIN_BG='https://wallpaper.forfun.com/fetch/31/319d98de418270ad20dbdf381c352f5f.jpeg';
 const TYPES=['RECLAMAÇÃO CONTRA JOGADORES','ENTENDER PUNIÇÃO','RECLAMAÇÃO CONTRA ORGS','RECLAMAÇÃO TÉCNICA'];
 type Page='home'|'rules'|'tickets'|'new'|'staff';
 type Ticket={id:string;category:string;subject:string;status:string;messages:any[];created_at:string;user_id?:string};
