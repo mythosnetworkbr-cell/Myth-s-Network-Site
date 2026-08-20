@@ -81,7 +81,7 @@ O portal possui estrutura preparada para controle administrativo, incluindo gere
 
 A conta administrativa principal definida para o projeto é:
 
-`quenidyyonline.17@gmail.com`
+`mythosnetworkbr@gmail.com`
 
 Essa conta deve ser tratada como administradora principal no sistema de autorização do backend, permitindo o gerenciamento de cargos de outros usuários.
 
