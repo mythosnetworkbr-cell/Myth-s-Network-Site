@@ -8,31 +8,74 @@ const URL=String((import.meta as any)?.env?.VITE_SUPABASE_URL||'https://rcjexjhz
 const KEY=String((import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY||'sb_publishable_OglouaI2szEvKmNvK3HEUQ_IOuHv-V-');
 const isWeb=typeof window!=='undefined';
 const storageKey='mythos_supabase_session';
-const getRaw=async()=>{try{return isWeb?window.localStorage.getItem(storageKey):await AsyncStorage.getItem(storageKey)}catch{return null}};
-const setRaw=async(v:string|null)=>{try{if(isWeb){if(v===null)window.localStorage.removeItem(storageKey);else window.localStorage.setItem(storageKey,v)}else{if(v===null)await AsyncStorage.removeItem(storageKey);else await AsyncStorage.setItem(storageKey,v)}}catch{}};
-const readSession=async():Promise<StoredSession|null>=>{const raw=await getRaw();if(!raw)return null;try{return JSON.parse(raw)}catch{return null}};
-const writeSession=async(s:StoredSession|null)=>setRaw(s?JSON.stringify(s):null);
-const headers=(token?:string)=>({'apikey':KEY,'Authorization':`Bearer ${token||KEY}`,'Content-Type':'application/json','Accept':'application/json'});
-async function api(path:string,init:RequestInit={},token?:string){const r=await fetch(`${URL}${path}`,{...init,headers:{...headers(token),...(init.headers||{})}});let data:any=null;try{data=await r.json()}catch{};if(!r.ok)throw new Error(data?.msg||data?.message||data?.error_description||data?.error||`Erro ${r.status}`);return data}
+
+async function getRaw(){try{return isWeb?window.localStorage.getItem(storageKey):await AsyncStorage.getItem(storageKey)}catch{return null}}
+async function setRaw(v:string|null){try{if(isWeb){if(v===null)window.localStorage.removeItem(storageKey);else window.localStorage.setItem(storageKey,v)}else{if(v===null)await AsyncStorage.removeItem(storageKey);else await AsyncStorage.setItem(storageKey,v)}}catch{}}
+async function readSession():Promise<StoredSession|null>{const raw=await getRaw();if(!raw)return null;try{return JSON.parse(raw)}catch{return null}}
+async function writeSession(s:StoredSession|null){await setRaw(s?JSON.stringify(s):null)}
+function headers(token?:string){return{apikey:KEY,Authorization:`Bearer ${token||KEY}`,'Content-Type':'application/json',Accept:'application/json'}}
+async function api(path:string,init:RequestInit={},token?:string){const r=await fetch(`${URL}${path}`,{...init,headers:{...headers(token),...(init.headers||{})}});let data:any=null;try{data=await r.json()}catch{}if(!r.ok)throw new Error(data?.msg||data?.message||data?.error_description||data?.error||`Erro ${r.status}`);return data}
 async function refresh(s:StoredSession){try{const d=await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:s.refresh_token})});const next={...s,access_token:d.access_token,refresh_token:d.refresh_token||s.refresh_token,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600),user:d.user||s.user};await writeSession(next);return next}catch{await writeSession(null);return null}}
 async function validSession(){let s=await readSession();if(!s)return null;if(s.expires_at&&s.expires_at<Math.floor(Date.now()/1000)+60)s=await refresh(s);return s}
 async function profileFor(id:string,token:string){try{const rows=await api(`/rest/v1/profiles?id=eq.${encodeURIComponent(id)}&select=id,username,display_name,avatar_url,role,created_at`,{method:'GET'},token);return rows?.[0]||null}catch{return null}}
-async function enrich(s:StoredSession|null){if(!s)return null;const p=await profileFor(s.user.id,s.access_token);return p?{...s,user:{...s.user,user_metadata:{...(s.user.user_metadata||{}),display_name:p.display_name},app_metadata:{...(s.user.app_metadata||{}),role:p.role},profile:p}}:s}
+async function enrich(s:StoredSession|null){if(!s)return null;const p=await profileFor(s.user.id,s.access_token);if(!p)return s;return{...s,user:{...s.user,user_metadata:{...(s.user.user_metadata||{}),display_name:p.display_name},app_metadata:{...(s.user.app_metadata||{}),role:p.role},profile:p}}}
+
 let listeners:Array<(event:string,session:any)=>void>=[];
-function emit(event:string,s:any){listeners.forEach(fn=>fn(event,s))}
+function emit(event:string,session:any){listeners.forEach(fn=>fn(event,session))}
+
 const auth={
  async getSession(){const s=await validSession();const e=await enrich(s);return{data:{session:e?{access_token:e.access_token,refresh_token:e.refresh_token,user:e.user}:null},error:null}},
  onAuthStateChange(callback:(event:string,session:any)=>void){listeners.push(callback);return{data:{subscription:{unsubscribe(){listeners=listeners.filter(x=>x!==callback)}}}}},
  async signInWithPassword({email,password}:{email:string;password:string}){try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email:email.trim().toLowerCase(),password})});const s={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600),user:d.user};await writeSession(s);const e=await enrich(s);emit('SIGNED_IN',e);return{data:{session:e?{access_token:e.access_token,refresh_token:e.refresh_token,user:e.user}:null},error:null}}catch(e:any){return{data:{session:null},error:{message:e.message}}}},
- async signUp({email,password,options}:{email:string;password:string;options?:any}){try{const d=await api('/auth/v1/signup',{method:'POST',body:JSON.stringify({email:email.trim().toLowerCase(),password,data:options?.data||{}})});if(!d.access_token){return{data:{session:null,user:d},error:null}}const s={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600),user:d.user};await writeSession(s);const e=await enrich(s);emit('SIGNED_IN',e);return{data:{session:e,user:e?.user},error:null}}catch(e:any){return{data:{session:null,user:null},error:{message:e.message}}}},
- async signInWithOAuth({provider}:{provider:string}){if(!isWeb)return{data:null,error:{message:'OAuth está disponível no site.'}};if(provider!=='google')return{data:null,error:{message:'Provedor não suportado.'}};window.location.href=`${URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(window.location.origin)}`;return{data:null,error:null}},
+ async signUp({email,password,options}:{email:string;password:string;options?:any}){try{const d=await api('/auth/v1/signup',{method:'POST',body:JSON.stringify({email:email.trim().toLowerCase(),password,data:options?.data||{}})});if(!d.access_token)return{data:{session:null,user:d},error:null};const s={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600),user:d.user};await writeSession(s);const e=await enrich(s);emit('SIGNED_IN',e);return{data:{session:e,user:e?.user},error:null}}catch(e:any){return{data:{session:null,user:null},error:{message:e.message}}}},
  async signOut(){await writeSession(null);emit('SIGNED_OUT',null);return{error:null}}
 };
+
 export function canManageRoles(user:any){const role=user?.app_metadata?.role;return!!user&&(String(user.email||'').toLowerCase()===MASTER_ADMIN_EMAIL||role==='admin')}
-export async function listUsers(){const s=await validSession();if(!s)throw new Error('Sessão expirada.');const rows=await api('/rest/v1/rpc/mythos_admin_users',{method:'POST',body:'{}'},s.access_token);return rows||[]}
-export async function getUserCount(){const s=await validSession();if(!s)return 0;const n=await api('/rest/v1/rpc/mythos_user_count',{method:'POST',body:'{}'},s.access_token);return Number(n||0)}
+export async function listUsers(){const s=await validSession();if(!s)throw new Error('Sessão expirada.');return(await api('/rest/v1/rpc/mythos_admin_users',{method:'POST',body:'{}'},s.access_token))||[]}
+export async function getUserCount(){const s=await validSession();if(!s)return 0;return Number(await api('/rest/v1/rpc/mythos_user_count',{method:'POST',body:'{}'},s.access_token)||0)}
 export async function setUserRole(targetUserId:string,role:AppRole){const s=await validSession();if(!s)return{error:{message:'Você precisa estar autenticado.'}};try{await api('/rest/v1/rpc/mythos_set_role',{method:'POST',body:JSON.stringify({target_id:targetUserId,new_role:role})},s.access_token);return{data:true,error:null}}catch(e:any){return{error:{message:e.message}}}}
-export async function getProfileAvatar(userId:string){const s=await validSession();if(!s)return null;const p=await profileFor(userId,s.access_token);return p?.avatar_url||null}
+export async function getProfileAvatar(userId:string){const s=await validSession();if(!s)return null;return(await profileFor(userId,s.access_token))?.avatar_url||null}
 export async function setProfileAvatar(userId:string,dataUrl:string|null){const s=await validSession();if(!s)return{data:null,error:{message:'Sessão expirada.'}};try{await api(`/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`,{method:'PATCH',headers:{Prefer:'return=minimal'},body:JSON.stringify({avatar_url:dataUrl,updated_at:new Date().toISOString()})},s.access_token);return{data:dataUrl,error:null}}catch(e:any){return{data:null,error:{message:e.message}}}}
-export async function getAccessToken(){const s=await validSession();return s?.access_token||null}
-export const supabase={auth,from:(table:string)=>({select:(columns='*')=>({order:async(field:string,opts:any={})=>{const s=await validSession();if(!s)return{data:null,error:{message:'Sessão expirada.'}};try{const q=`/rest/v1/${table}?select=${encodeURIComponent(columns)}&order=${encodeURIComponent(field)}.${opts.ascending?'asc':'desc'}`;return{data:await api(q,{method:'GET'},s.access_token),error:null}}catch(e:any){return{data:null,error:{message:e.message}}}}}),insert:(row:any)=>({select:()=>({single:async()=>{const s=await validSession();if(!s)return{data:null,error:{message:'Sessão expirada.'}};try{return{data:(await api(`/rest/v1/${table}`,{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(row)},s.access_token))[0],error:null}}catch(e:any){return{data:null,error:{message:e.message}}}}})}),update:(patch:any)=>({eq:(_field:string,value:any)=>({select:()=>({single:async()=>{const s=await validSession();if(!s)return{data:null,error:{message:'Sessão expirada.'}};try{return{data:(await api(`/rest/v1/${table}?id=eq.${encodeURIComponent(value)}`,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(patch)},s.access_token))[0],error:null}}catch(e:any){return{data:null,error:{message:e.message}}}}})})})};
+
+function makeTable(table:string){
+ const select=(columns='*')=>({
+  order:async(field:string,opts:any={})=>{
+   const s=await validSession();
+   if(!s)return{data:null,error:{message:'Sessão expirada.'}};
+   try{
+    const q=`/rest/v1/${table}?select=${encodeURIComponent(columns)}&order=${encodeURIComponent(field)}.${opts.ascending?'asc':'desc'}`;
+    return{data:await api(q,{method:'GET'},s.access_token),error:null};
+   }catch(e:any){return{data:null,error:{message:e.message}}}
+  }
+ });
+ const insert=(row:any)=>({
+  select:()=>({
+   single:async()=>{
+    const s=await validSession();
+    if(!s)return{data:null,error:{message:'Sessão expirada.'}};
+    try{
+     const data=await api(`/rest/v1/${table}`,{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(row)},s.access_token);
+     return{data:data?.[0]||null,error:null};
+    }catch(e:any){return{data:null,error:{message:e.message}}}
+   }
+  })
+ });
+ const update=(patch:any)=>({
+  eq:(_field:string,value:any)=>({
+   select:()=>({
+    single:async()=>{
+     const s=await validSession();
+     if(!s)return{data:null,error:{message:'Sessão expirada.'}};
+     try{
+      const data=await api(`/rest/v1/${table}?id=eq.${encodeURIComponent(value)}`,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(patch)},s.access_token);
+      return{data:data?.[0]||null,error:null};
+     }catch(e:any){return{data:null,error:{message:e.message}}}
+    }
+   })
+  })
+ });
+ return{select,insert,update};
+}
+
+export const supabase={auth,from:makeTable};
