@@ -1,0 +1,30 @@
+name: Apply profile and admin UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/patch-profile-admin.py'
+      - 'App.web.tsx'
+      - 'lib/supabase.ts'
+      - '.github/workflows/apply-profile-admin.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, 'Apply profile/admin UI') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch App.web.tsx
+        run: python3 scripts/patch-profile-admin.py
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add App.web.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m 'Apply profile/admin UI'
+          git push
