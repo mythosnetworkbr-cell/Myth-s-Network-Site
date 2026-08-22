@@ -15,7 +15,7 @@ const CSS=`
 
 function Avatar({u}:{u:any}){return <div className="avatar">{u?.avatar_url?<img src={u.avatar_url} alt="Foto de perfil"/>:String(u?.display_name||u?.email||'M')[0].toUpperCase()}</div>}
 
-export default function AppWeb(){
+function AppWeb(){
  const[session,setSession]=useState<any>(null),[loading,setLoading]=useState(true),[mode,setMode]=useState<'login'|'signup'>('login'),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[name,setName]=useState(''),[err,setErr]=useState(''),[page,setPage]=useState('home'),[drawer,setDrawer]=useState(false),[notices,setNotices]=useState<any[]>([]),[showNotices,setShowNotices]=useState(false),[users,setUsers]=useState<any[]>([]),[count,setCount]=useState(0),[tickets,setTickets]=useState<any[]>([]),[cat,setCat]=useState(CATS[0]),[subject,setSubject]=useState(''),[message,setMessage]=useState(''),[openTicket,setOpenTicket]=useState<any>(null),[reply,setReply]=useState(''),[avatar,setAvatar]=useState<string|null>(null),[display,setDisplay]=useState(''),[saved,setSaved]=useState(''),[expanded,setExpanded]=useState<string>('');
  const user=session?.user,role=roleOf(user),unread=useMemo(()=>notices.filter(n=>!n.read).length,[notices]);
  async function refresh(){setNotices(await getNotifications().catch(()=>[]));setCount(await getUserCount().catch(()=>0));if(canManageRoles(user))setUsers(await listUsers().catch(()=>[]));setTickets(await getTickets().catch(()=>[]))}
@@ -43,4 +43,4 @@ export default function AppWeb(){
  {openTicket&&<div className="drawer" onClick={()=>setOpenTicket(null)}><div className="drawerBox" onClick={e=>e.stopPropagation()}><button className="icon" onClick={()=>setOpenTicket(null)}>×</button><h2>{openTicket.subject}</h2><p className="muted">{openTicket.category} · {openTicket.user_name}</p><div className="card"><b>Mensagem</b><p>{openTicket.message}</p></div>{openTicket.replies?.map((r:any)=><div className="reply" key={r.id}><b>{r.user_name} · {r.role}</b><div>{r.message}</div></div>)}{canManageTickets(user)&&openTicket.status!=='closed'&&<><label className="field">RESPOSTA<textarea value={reply} onChange={e=>setReply(e.target.value)} placeholder="Atenda o jogador..."/></label><button className="primary" onClick={()=>answer(openTicket)}>ATENDER TICKET</button><button className="ghost danger" style={{marginTop:10}} onClick={()=>close(openTicket)}>FECHAR TICKET</button></>}</div></div>}
  <nav className="bottom"><button onClick={()=>setPage('home')}><b>⌂</b>Início</button><button onClick={()=>setPage('rules')}><b>≡</b>Regras</button><button onClick={()=>setPage('tickets')}><b>◫</b>Tickets</button><button onClick={()=>setPage('profile')}><b>◎</b>Perfil</button></nav></div>;
 }
-export function WebRoot(){return <><style>{CSS}</style><AppWeb/></>}
+export default function WebRoot(){return <><style dangerouslySetInnerHTML={{__html:CSS}}/><AppWeb/></>}
