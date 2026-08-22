@@ -1,0 +1,67 @@
+name: Fix Mythos login visual
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply login design
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('App.web.tsx')
+          s=p.read_text(encoding='utf-8')
+          css=r'''
+          /* FINAL LOGIN VISUAL — reference #3 */
+          .auth{min-height:100svh!important;width:100%;position:relative;display:block!important;overflow:hidden!important;background:#050509 url('${BG}') center top/cover no-repeat!important;padding:0 0 28px!important;color:#fff!important}
+          .auth:before{content:"";position:absolute!important;inset:0!important;background:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(3,4,10,.48) 42%,rgba(3,4,10,.96) 100%)!important;pointer-events:none!important}
+          .auth:after{content:"";position:absolute!important;inset:0!important;background:radial-gradient(circle at 50% 16%,rgba(0,234,255,.15),transparent 24%),linear-gradient(90deg,rgba(0,210,255,.08),transparent 28%,transparent 72%,rgba(255,0,120,.08))!important;pointer-events:none!important}
+          .authBrand{position:relative!important;z-index:2!important;height:350px!important;padding:62px 12px 0!important;margin:0!important;text-align:center!important;font-family:Arial Black,Impact,sans-serif!important;font-size:92px!important;line-height:.9!important;letter-spacing:-7px!important;color:#f7fbff!important;-webkit-text-stroke:1px rgba(255,255,255,.8)!important;text-shadow:0 0 12px #fff,0 0 30px rgba(0,229,255,.65),0 0 50px rgba(255,0,128,.4),0 7px 30px #000!important;transform:none!important}
+          .authBrand:after{content:'MYTHØS NETWORK'!important;display:block!important;margin-top:18px!important;font-family:Inter,Arial,sans-serif!important;font-size:10px!important;line-height:1!important;letter-spacing:5px!important;color:rgba(255,255,255,.75)!important;text-shadow:0 2px 8px #000!important;transform:none!important}
+          .authBox{position:relative!important;z-index:4!important;width:calc(100% - 32px)!important;max-width:590px!important;margin:-42px auto 0!important;padding:34px 34px 28px!important;border:1px solid rgba(0,225,255,.42)!important;border-radius:34px!important;background:linear-gradient(180deg,rgba(6,7,15,.92),rgba(5,5,12,.98))!important;backdrop-filter:blur(22px)!important;box-shadow:0 22px 70px rgba(0,0,0,.7),0 0 45px rgba(0,215,255,.08),inset 0 1px rgba(255,255,255,.08)!important}
+          .authBox:before{content:""!important;position:absolute!important;left:24px!important;right:24px!important;top:0!important;height:2px!important;background:linear-gradient(90deg,transparent,#00e5ff,#ff2a91,transparent)!important;opacity:1!important}
+          .authBox h1{font-family:Inter,system-ui,sans-serif!important;font-size:42px!important;line-height:1.05!important;letter-spacing:-1.7px!important;text-transform:none!important;color:#fff!important;text-shadow:none!important;margin:8px 0 10px!important;font-weight:800!important}
+          .authBox p{font-family:Inter,system-ui,sans-serif!important;color:#9fa2b3!important;font-size:18px!important;line-height:1.5!important;margin:0 0 28px!important}
+          .authBox .eyebrow{font-family:Inter,system-ui,sans-serif!important;color:#00dfff!important;font-size:10px!important;letter-spacing:2.2px!important;font-weight:800!important}
+          .authBox .cityBox{display:none!important}
+          .authBox .field{display:block!important;color:#c7c9d4!important;font-family:Inter,system-ui,sans-serif!important;font-size:11px!important;letter-spacing:2px!important;font-weight:800!important;margin:18px 0!important}
+          .authBox .field input{height:70px!important;margin-top:10px!important;padding:0 22px!important;border-radius:20px!important;border:1px solid rgba(80,88,120,.8)!important;background:#e9f0ff!important;color:#111827!important;font-size:17px!important;font-weight:650!important;box-shadow:inset 0 1px rgba(255,255,255,.8)!important}
+          .authBox .field input::placeholder{color:#737b8c!important}
+          .authBox .field input:focus{border-color:#00dfff!important;box-shadow:0 0 0 3px rgba(0,223,255,.12)!important;outline:none!important}
+          .authBox .primary{height:70px!important;margin-top:14px!important;border:0!important;border-radius:20px!important;background:linear-gradient(100deg,#0bdfff 0%,#6d68ff 50%,#ff237d 100%)!important;color:#fff!important;font-family:Inter,system-ui,sans-serif!important;font-size:21px!important;font-weight:900!important;letter-spacing:0!important;box-shadow:0 12px 34px rgba(255,31,123,.22),0 0 28px rgba(0,220,255,.14)!important}
+          .authBox .primary:active{transform:scale(.99)!important}
+          .authBox .forgot,.authBox .switch{font-family:Inter,system-ui,sans-serif!important;font-size:16px!important;color:#8f93a4!important}
+          .authBox .switch{margin-top:34px!important}
+          .authBox .switch b,.authBox .forgot{color:#08ddff!important;text-decoration:none!important}
+          .authBox .error{border-radius:16px!important;background:rgba(255,35,98,.08)!important;border:1px solid rgba(255,35,98,.5)!important;color:#ff9ab9!important;padding:14px 16px!important}
+          .gtaCopyright{position:relative!important;z-index:3!important;margin:20px auto 0!important;width:calc(100% - 40px)!important;text-align:center!important;font-family:Inter,system-ui,sans-serif!important;color:#747889!important;font-size:11px!important;letter-spacing:1px!important}.gtaCopyright b{color:#00dcff!important}
+          @media(max-width:600px){.authBrand{height:330px!important;font-size:78px!important;padding-top:58px!important}.authBox{width:calc(100% - 32px)!important;padding:30px 24px 26px!important;border-radius:30px!important}.authBox h1{font-size:34px!important}.authBox p{font-size:16px!important}.authBox .field input,.authBox .primary{height:64px!important}.gtaCopyright{margin-top:18px!important}}
+          @media(max-width:380px){.authBrand{height:300px!important;font-size:68px!important}.authBox{margin-top:-30px!important;padding:26px 20px 24px!important}.authBox h1{font-size:31px!important}}
+          '''
+          marker='\n`;\n\nfunction Avatar'
+          if 'FINAL LOGIN VISUAL' not in s:
+              s=s.replace(marker, '\n'+css+'\n`;\n\nfunction Avatar', 1)
+          pattern=r"if\(!session\)return <div className=\\\"app auth\\\">.*?\n const go=\\(p:string\\)=>"
+          replacement='''if(!session)return <div className="app auth"><div className="authBrand">MØ</div><div className="authBox"><div className="eyebrow">MYTHØS NETWORK • CENTRAL DO JOGADOR</div><h1>{mode==='login'?'Bem-vindo de volta!':mode==='signup'?'Crie sua conta':'Recupere seu acesso'}</h1><p>{mode==='login'?'Entre para acessar sua central.':mode==='signup'?'Crie sua conta para acessar Lex City RP e Nyx Roleplay.':'Recupere o acesso à sua conta Mythøs Network.'}</p>{err&&<div className="error">{err}</div>}<form onSubmit={doAuth}>{mode==='signup'&&<label className="field">NOME<input value={name} onChange={e=>setName(e.target.value)} placeholder="Seu nome" required/></label>}<label className="field">E-MAIL<input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="seu@email.com" required/></label>{mode!=='forgot'&&<label className="field">SENHA<input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Sua senha" minLength={6} required/></label>}<button className="primary">{mode==='login'?'ENTRAR':mode==='signup'?'CRIAR CONTA':'SOLICITAR RECUPERAÇÃO'}</button></form>{mode==='login'&&<button className="forgot" onClick={()=>{setMode('forgot');setErr('')}}>Esqueci minha senha</button>}<button className="switch" onClick={()=>{setMode(mode==='login'?'signup':'login');setErr('')}}>{mode==='login'?<>Ainda não tem conta? <b>Criar agora</b></>:<>Já possui conta? <b>Entrar</b></>}</button></div><div className="gtaCopyright">Lex City RP • Nyx Roleplay<br/><b>Criada por Mythøs Network</b></div></div>;
+ const go=(p:string)=>'''
+          ns,n=re.subn(pattern,replacement,s,flags=re.S)
+          if n!=1:
+              raise SystemExit(f'auth block replacement count={n}')
+          p.write_text(ns,encoding='utf-8')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet; then exit 0; fi
+          git add App.web.tsx
+          git commit -m 'fix: restore GTA-inspired Mythos login visual'
+          git push
