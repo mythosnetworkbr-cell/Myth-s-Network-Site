@@ -1,0 +1,41 @@
+name: Build and Publish Download
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Package website
+        run: |
+          mkdir -p release
+          zip -r release/mythos-network-site.zip . \
+            -x '.git/*' '.github/*' 'node_modules/*' 'release/*'
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: release/mythos-network-site.zip
+          generate_release_notes: true
