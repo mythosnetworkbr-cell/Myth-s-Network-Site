@@ -21,6 +21,17 @@
       "created_at": "2026-08-31T09:17:59.802Z",
       "passwordHash": "b4539f6d27cb20b82d48be5298b1a5b6c8326f44318cb08b22ca0ebbd459c6ca077c81f6d68bafdc56b17b485b653fe846515b6a0daecb9dcc7020f87a163e66",
       "passwordSalt": "8f56922c1b7cc7abbe8671f9c1ee2924"
+    },
+    {
+      "id": "94a25c5d-bd99-4d9a-ba27-d98c8ce7cf59",
+      "email": "hannariccon@gmail.com",
+      "username": "Hanna",
+      "display_name": "Hanna",
+      "avatar_url": null,
+      "role": "player",
+      "created_at": "2026-08-31T09:22:37.844Z",
+      "passwordHash": "4254495cb0a8e5de529984c688e11d827e8be034df57d1381b1cd24a0aea73b56497df2ba4f2aa7a0352f099195a11425afedcb6eb0b630034295350ba9a05c1",
+      "passwordSalt": "47e10a997556260f1d6bd3908bce1f89"
     }
   ],
   "tickets": [],
