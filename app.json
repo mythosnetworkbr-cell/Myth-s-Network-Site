@@ -1,23 +1,18 @@
 {
   "expo": {
-    "name": "Mythøs Network Samp",
-    "slug": "mythos-network-samp",
-    "version": "1.3.4",
+    "name": "Lumis",
+    "slug": "lumis-streaming",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "scheme": "mythos",
+    "scheme": "lumis",
     "web": {},
-    "plugins": [
-      "expo-image-picker"
-    ],
+    "plugins": ["expo-image-picker"],
     "extra": {
       "brand": {
-        "name": "Mythøs Network Samp",
-        "company": "Mythøs Network",
-        "primaryColor": "#FF1744"
-      },
-      "eas": {
-        "projectId": "d02dd6bc-3716-4070-ae11-70e3a86bc93d"
+        "name": "Lumis",
+        "company": "Lumis",
+        "primaryColor": "#B85CFF"
       }
     }
   }
