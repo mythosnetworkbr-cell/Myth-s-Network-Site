@@ -10,6 +10,17 @@
       "created_at": "2026-08-22T04:43:36.284Z",
       "passwordHash": "b9065b8170e3d0856c59eb418c35ccd7a83bb62f4d15ba1bb2ebef2a584491cdcdee10d7eb6b42b1901c682742e7d694b3f08b24f0c65380a6f6102ad0bb57d1",
       "passwordSalt": "8d4c2cce3a201baff42f9dd584bba9be"
+    },
+    {
+      "id": "e32f5979-c5d9-4912-a96c-64e45aa3a086",
+      "email": "gamesfloriano8@gmail.com",
+      "username": "gamesfloriano8@gmail.com",
+      "display_name": "gamesfloriano8@gmail.com",
+      "avatar_url": null,
+      "role": "player",
+      "created_at": "2026-08-31T09:17:59.802Z",
+      "passwordHash": "b4539f6d27cb20b82d48be5298b1a5b6c8326f44318cb08b22ca0ebbd459c6ca077c81f6d68bafdc56b17b485b653fe846515b6a0daecb9dcc7020f87a163e66",
+      "passwordSalt": "8f56922c1b7cc7abbe8671f9c1ee2924"
     }
   ],
   "tickets": [],
