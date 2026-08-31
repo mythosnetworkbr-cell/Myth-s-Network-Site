@@ -2,34 +2,13 @@
   "name": "lumis-streaming",
   "version": "1.0.0",
   "private": true,
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "typecheck": "tsc --noEmit",
-    "doctor": "npx expo-doctor"
+    "start": "node server.js",
+    "build": "node build.js",
+    "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@expo/vector-icons": "^15.0.0",
-    "@react-native-async-storage/async-storage": "^2.2.0",
-    "@vercel/node": "^5.3.21",
-    "expo": "^57.0.0",
-    "expo-auth-session": "~57.0.6",
-    "expo-font": "~57.0.0",
-    "expo-image-picker": "~57.0.5",
-    "expo-status-bar": "~57.0.1",
-    "expo-video": "~57.0.1",
-    "expo-web-browser": "~57.0.2",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-native": "0.86.2",
-    "react-native-web": "^0.21.2",
-    "react-native-url-polyfill": "^3.0.0"
-  },
-  "devDependencies": {
-    "@types/react": "~19.2.0",
-    "typescript": "~6.0.3"
-  }
+  "engines": { "node": ">=20" },
+  "dependencies": {},
+  "devDependencies": {}
 }
