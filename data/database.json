@@ -48,10 +48,12 @@
   "tickets": [],
   "notifications": [],
   "settings": {
-    "apkUrl": "https://github.com/mythosnetworkbr-cell/Myth-s-Network-Site/releases/latest",
-    "discordUrl": "https://discord.com/app",
+    "apkUrl": "https://drive.google.com/drive/folders/18nWA56IR59N84h5QReKGpRrj9YMQwTkL",
+    "discordUrl": "https://discord.gg/vJb2Aqzda",
     "storeUrl": "https://discord.com/app",
-    "supportUrl": "https://discord.com/app",
-    "videoUrl": "https://www.youtube.com/embed/Ny780FeCJnA?rel=0&modestbranding=1"
+    "supportUrl": "https://discord.com/channels/1534347794486394901/1536445797489578054",
+    "videoUrl": "https://www.youtube.com/embed/Ny780FeCJnA?rel=0&modestbranding=1",
+    "logoUrl": "/assets/icon.png",
+    "iconUrl": "/assets/icon.png"
   }
 }
