@@ -1,0 +1,1 @@
+Static route verification: /, /suporte, /tickets, /painel-admin, /admin, /painel, /perfil, /profile, /regras and 404 fallback.
