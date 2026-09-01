@@ -2,13 +2,11 @@
   "name": "lumis-streaming",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
+  "description": "Lumis Streaming — plataforma de filmes e séries",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "node build.js",
-    "typecheck": "tsc --noEmit"
+    "build": "node build.js"
   },
-  "engines": { "node": ">=20" },
-  "dependencies": {},
-  "devDependencies": {}
+  "engines": { "node": ">=20" }
 }
