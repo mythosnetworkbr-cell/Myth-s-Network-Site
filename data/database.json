@@ -32,6 +32,17 @@
       "created_at": "2026-08-31T09:22:37.844Z",
       "passwordHash": "4254495cb0a8e5de529984c688e11d827e8be034df57d1381b1cd24a0aea73b56497df2ba4f2aa7a0352f099195a11425afedcb6eb0b630034295350ba9a05c1",
       "passwordSalt": "47e10a997556260f1d6bd3908bce1f89"
+    },
+    {
+      "id": "f0c4545c-759a-46e0-a034-7eb1e6a4158d",
+      "email": "quenidyy21.esc@gmail.com",
+      "username": "Dev_Brasil",
+      "display_name": "Dev Brasil",
+      "avatar_url": null,
+      "role": "player",
+      "created_at": "2026-09-01T16:13:10.166Z",
+      "passwordHash": "3936c6191be51c1225834948cc821c659e805fd071e1508b1e582fe19f51a05b53ce4a1c6738916c493067111daa55b02e137fbf8521c277af8106e6be7b6c22",
+      "passwordSalt": "8f73fdc23fa7a7e08c1bd83c8afa7bfd"
     }
   ],
   "tickets": [],
