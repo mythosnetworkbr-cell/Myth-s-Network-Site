@@ -1,0 +1,33 @@
+name: Apply Mythos icon palette
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  palette:
+    if: ${{ !contains(github.event.head_commit.message, '[icon-palette]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply palette
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          repl={
+            '#050507':'#05020a','#07070e':'#07030f','#08080c':'#09040f','#0e0e13':'#100616','#101015':'#120719','#111116':'#14081b','#12121a':'#17091f','#09090d':'#0a040f','#0d0d12':'#110615','#17171d':'#190a20','#292936':'#3a1550','#262631':'#3b1652','#34343e':'#4a1d61','#30303a':'#4b1d63','#777783':'#9b7ca9','#9999a5':'#b28dbf','#aaaab4':'#c09acb','#d0d0d7':'#eadcf0',
+            '#18d9ff':'#10dff5','#19dcff':'#11e4f4','#20dcff':'#18e4ff','#16cfe8':'#11dff5','#10dcec':'#10dff5','#0de0f2':'#10dff5','#22edff':'#5af3ff','#8d18ff':'#a52cff','#a83cff':'#b52cff','#ff18d0':'#ff2bd6','#ff22d5':'#ff31d8','#5326ff':'#6f2cff','#9a39ff':'#9b36ff','#12d98b':'#13d9ff','#0aa6ff':'#7b2cff','#39f1b0':'#2de5ff'
+          }
+          for a,b in repl.items(): s=s.replace(a,b)
+          s=s.replace('linear-gradient(135deg,#ffb000,#ff4d00)','linear-gradient(135deg,#a82cff,#16d9ff)').replace('border:1px solid #ffc44d','border:1px solid #d05cff').replace('color:#160900','color:#07030d')
+          p.write_text(s,encoding='utf-8')
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'chore: aplicar paleta roxo cyan do icone [icon-palette]'
+          git push
