@@ -45,7 +45,27 @@
       "passwordSalt": "8f73fdc23fa7a7e08c1bd83c8afa7bfd"
     }
   ],
-  "tickets": [],
+  "tickets": [
+    {
+      "id": "73060845-cfc3-4900-a4b9-5445a1d38d62",
+      "code": "MYT-BEB15EB9",
+      "category": "Reclamação contra Jogadores",
+      "name": "Mythøs Network",
+      "subject": "Fui morto",
+      "status": "open",
+      "created_at": "2026-09-02T07:53:53.422Z",
+      "updated_at": "2026-09-02T07:53:53.422Z",
+      "messages": [
+        {
+          "id": "71f568cf-8ac8-4aed-8a6c-06f4211eaccc",
+          "author": "Mythøs Network",
+          "body": "Fui morto por um player",
+          "staff": false,
+          "created_at": "2026-09-02T07:53:53.422Z"
+        }
+      ]
+    }
+  ],
   "notifications": [],
   "settings": {
     "apkUrl": "https://drive.google.com/drive/folders/18nWA56IR59N84h5QReKGpRrj9YMQwTkL",
