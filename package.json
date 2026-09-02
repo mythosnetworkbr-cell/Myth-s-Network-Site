@@ -9,7 +9,11 @@
     "build": "node build.js"
   },
   "dependencies": {
-    "@vercel/blob": "latest"
+    "@vercel/blob": "latest",
+    "@vercel/node": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest"
   },
   "engines": { "node": ">=20" }
 }
