@@ -8,7 +8,7 @@ export default async function handler(req:VercelRequest,res:VercelResponse){
     const body=typeof req.body==='string'?JSON.parse(req.body):req.body;
     const json=await handleUpload({
       body,
-      request:req,
+      request:req as any,
       token:process.env.BLOB_READ_WRITE_TOKEN,
       onBeforeGenerateToken:async(pathname)=>({
         allowedContentTypes:['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/quicktime'],
