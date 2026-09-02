@@ -1,12 +1,15 @@
 {
-  "name": "lumis-streaming",
+  "name": "mythos-network-site",
   "version": "1.0.0",
   "private": true,
-  "description": "Lumis Streaming — plataforma de filmes e séries",
+  "description": "Rede Mythøs — site oficial e suporte",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "build": "node build.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "latest"
   },
   "engines": { "node": ">=20" }
 }
