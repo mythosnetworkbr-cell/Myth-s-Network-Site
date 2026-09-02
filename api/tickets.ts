@@ -1,41 +1,40 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'node:crypto';
-import { readDB, writeDB, currentUser } from './_github';
+import { readDB, writeDB, currentUser, passwordHash, passwordOk, addLog } from './_github';
 
 const CATEGORIES=['Reclamação contra Jogadores','Entender Punição','Reclamação contra Orgs','Reclamação Técnica','Marcar Ação','Solicitar Ajuda','Seja Influência','Candidato a Administração'];
 const clean=(v:any,max=4000)=>String(v??'').trim().slice(0,max);
-const safeTicket=(t:any)=>({id:t.id,code:t.code,category:t.category,subject:t.subject,name:t.name,status:t.status,created_at:t.created_at,updated_at:t.updated_at,messages:(t.messages||[]).map((m:any)=>({id:m.id,author:m.author,body:m.body,staff:!!m.staff,created_at:m.created_at}))});
+const meta=(req:any)=>({ip:String(req.headers['x-forwarded-for']||req.socket?.remoteAddress||'desconhecido').split(',')[0].trim(),userAgent:String(req.headers['user-agent']||'').slice(0,300)});
+const safeAttachments=(a:any[])=>Array.isArray(a)?a.slice(0,4).map(x=>({url:String(x.url||''),name:String(x.name||'anexo').slice(0,160),type:String(x.type||'').slice(0,80),size:Number(x.size||0),duration:Number(x.duration||0)})).filter(x=>x.url):[];
+const safeTicket=(t:any)=>({id:t.id,code:t.code,category:t.category,subject:t.subject,name:t.name,email:t.email,status:t.status,created_at:t.created_at,updated_at:t.updated_at,messages:(t.messages||[]).map((m:any)=>({id:m.id,author:m.author,body:m.body,staff:!!m.staff,created_at:m.created_at,attachments:safeAttachments(m.attachments||[])}))});
 const makeCode=()=>`MYT-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+const blobUrl=(url:string)=>{try{const u=new URL(url);return u.protocol==='https:'&&u.hostname.endsWith('.public.blob.vercel-storage.com')}catch{return false}};
+const validateAttachments=(items:any[])=>{const a=safeAttachments(items);if(a.length>4)throw new Error('Máximo de 4 anexos por mensagem.');for(const x of a){if(!blobUrl(x.url))throw new Error('Anexo inválido: use o armazenamento oficial Vercel Blob.');if(!Number.isFinite(x.size)||x.size<=0||x.size>100*1024*1024)throw new Error('Arquivo acima do limite de 100 MB.');if(x.type.startsWith('image/')&&x.size>10*1024*1024)throw new Error('Fotos têm limite de 10 MB.');if(x.type.startsWith('video/')&&x.duration>120)throw new Error('Vídeos de denúncia podem ter no máximo 2 minutos.');}return a};
+const ticketAuth=(t:any,email:any,password:any)=>{if(!t.passwordHash)return true;const e=clean(email,180).toLowerCase(),p=String(password||'');return e===String(t.email||'').toLowerCase()&&p.length>=6&&passwordOk(p,t.passwordHash,t.passwordSalt)};
 
 export default async function handler(req:VercelRequest,res:VercelResponse){
   try{
-    const {db,sha}=await readDB();
-    db.tickets=db.tickets||[];
+    const {db,sha}=await readDB();db.tickets=db.tickets||[];
     if(req.method==='GET'){
       const code=clean(req.query.code,40).toUpperCase();
-      if(code){const t=db.tickets.find((x:any)=>x.code===code);if(!t)return res.status(404).json({error:'Ticket não encontrado.'});return res.status(200).json({ticket:safeTicket(t)});}
-      const u=currentUser(req,db); if(!u||u.role!=='admin')return res.status(403).json({error:'Acesso restrito ao administrador.'});
-      return res.status(200).json({tickets:db.tickets.map(safeTicket).sort((a:any,b:any)=>String(b.updated_at).localeCompare(String(a.updated_at)))});
+      if(code){const t=db.tickets.find((x:any)=>x.code===code);if(!t)return res.status(404).json({error:'Ticket não encontrado.'});if(t.passwordHash&&!ticketAuth(t,req.query.email,req.query.password))return res.status(401).json({error:'E-mail ou senha do ticket incorretos.'});addLog(db,{type:'ticket_access',email:t.email||String(req.query.email||'').toLowerCase(),ticket:code,category:t.category,...meta(req)});await writeDB(db,sha,`suporte: acessar ticket ${code}`);return res.status(200).json({ticket:safeTicket(t)});}
+      const u=currentUser(req,db);if(!u||u.role!=='admin')return res.status(403).json({error:'Acesso restrito ao administrador.'});return res.status(200).json({tickets:db.tickets.map(safeTicket).sort((a:any,b:any)=>String(b.updated_at).localeCompare(String(a.updated_at)))});
     }
     if(req.method!=='POST')return res.status(405).json({error:'Método não permitido'});
-    const b:any=req.body||{}; const action=clean(b.action,20);
+    const b:any=req.body||{},action=clean(b.action,20);
     if(action==='create'){
-      const category=clean(b.category,80),name=clean(b.name,80),subject=clean(b.subject,160),body=clean(b.body,4000);
-      if(!CATEGORIES.includes(category)||!name||!subject||!body)return res.status(400).json({error:'Preencha nome, categoria, assunto e mensagem.'});
-      let code=makeCode(); while(db.tickets.some((x:any)=>x.code===code))code=makeCode();
-      const now=new Date().toISOString(); const t={id:crypto.randomUUID(),code,category,name,subject,status:'open',created_at:now,updated_at:now,messages:[{id:crypto.randomUUID(),author:name,body,staff:false,created_at:now}]};
-      db.tickets.push(t); await writeDB(db,sha,`suporte: abrir ticket ${code}`); return res.status(201).json({ticket:safeTicket(t)});
+      const category=clean(b.category,80),name=clean(b.name,80),email=clean(b.email,180).toLowerCase(),password=String(b.password||''),subject=clean(b.subject,160),body=clean(b.body,4000),attachments=validateAttachments(b.attachments||[]);
+      if(!CATEGORIES.includes(category)||!name||!email.includes('@')||password.length<6||!subject||(!body&&!attachments.length))return res.status(400).json({error:'Preencha nome, e-mail, senha, categoria, assunto e mensagem ou anexo.'});
+      let code=makeCode();while(db.tickets.some((x:any)=>x.code===code))code=makeCode();const hp=passwordHash(password),now=new Date().toISOString();
+      const t={id:crypto.randomUUID(),code,category,name,email,subject,status:'open',created_at:now,updated_at:now,passwordHash:hp.hash,passwordSalt:hp.salt,messages:[{id:crypto.randomUUID(),author:name,body,staff:false,created_at:now,attachments}]};
+      db.tickets.push(t);addLog(db,{type:'ticket_create',email,display_name:name,ticket:code,category,...meta(req)});await writeDB(db,sha,`suporte: abrir ticket ${code}`);return res.status(201).json({ticket:safeTicket(t)});
     }
     if(action==='reply'){
-      const code=clean(b.code,40).toUpperCase(),body=clean(b.body,4000),u=currentUser(req,db); const t=db.tickets.find((x:any)=>x.code===code);
-      if(!t)return res.status(404).json({error:'Ticket não encontrado.'}); if(!body)return res.status(400).json({error:'Mensagem vazia.'});
-      const isStaff=!!u&&u.role==='admin'; if(t.status==='closed'&&!isStaff)return res.status(400).json({error:'Este ticket está encerrado.'});
-      const now=new Date().toISOString(); t.messages=t.messages||[]; t.messages.push({id:crypto.randomUUID(),author:isStaff?(u.display_name||u.username):t.name,body,staff:isStaff,created_at:now}); t.status=isStaff?'waiting_user':'open'; t.updated_at=now;
-      await writeDB(db,sha,`suporte: responder ticket ${code}`); return res.status(200).json({ticket:safeTicket(t)});
+      const code=clean(b.code,40).toUpperCase(),body=clean(b.body,4000),attachments=validateAttachments(b.attachments||[]),u=currentUser(req,db),t=db.tickets.find((x:any)=>x.code===code);if(!t)return res.status(404).json({error:'Ticket não encontrado.'});
+      const isStaff=!!u&&['admin','support'].includes(u.role);if(!isStaff&&!ticketAuth(t,b.email,b.password))return res.status(401).json({error:'E-mail ou senha do ticket incorretos.'});if(!body&&!attachments.length)return res.status(400).json({error:'Envie uma mensagem ou anexo.'});if(t.status==='closed'&&!isStaff)return res.status(400).json({error:'Este ticket está encerrado.'});
+      const now=new Date().toISOString();t.messages=t.messages||[];t.messages.push({id:crypto.randomUUID(),author:isStaff?(u.display_name||u.username):t.name,body,staff:isStaff,created_at:now,attachments});t.status=isStaff?'waiting_user':'open';t.updated_at=now;addLog(db,{type:'ticket_reply',email:isStaff?u.email:t.email,ticket:code,staff:isStaff,...meta(req)});await writeDB(db,sha,`suporte: responder ticket ${code}`);return res.status(200).json({ticket:safeTicket(t)});
     }
-    if(action==='close'||action==='reopen'){
-      const u=currentUser(req,db); if(!u||u.role!=='admin')return res.status(403).json({error:'Acesso restrito ao administrador.'}); const code=clean(b.code,40).toUpperCase(),t=db.tickets.find((x:any)=>x.code===code); if(!t)return res.status(404).json({error:'Ticket não encontrado.'}); t.status=action==='close'?'closed':'open';t.updated_at=new Date().toISOString();await writeDB(db,sha,`admin: ${action} ticket ${code}`);return res.status(200).json({ticket:safeTicket(t)});
-    }
+    if(action==='close'||action==='reopen'){const u=currentUser(req,db);if(!u||u.role!=='admin')return res.status(403).json({error:'Acesso restrito ao administrador.'});const code=clean(b.code,40).toUpperCase(),t=db.tickets.find((x:any)=>x.code===code);if(!t)return res.status(404).json({error:'Ticket não encontrado.'});t.status=action==='close'?'closed':'open';t.updated_at=new Date().toISOString();addLog(db,{type:`ticket_${action}`,email:u.email,ticket:code,...meta(req)});await writeDB(db,sha,`admin: ${action} ticket ${code}`);return res.status(200).json({ticket:safeTicket(t)});}
     return res.status(400).json({error:'Ação inválida.'});
   }catch(e:any){return res.status(500).json({error:e.message||'Erro interno'});}
 }
