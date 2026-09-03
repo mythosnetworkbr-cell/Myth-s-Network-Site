@@ -82,6 +82,16 @@
   },
   "logs": [
     {
+      "id": "bec0a321-6dad-4990-84b4-9fee4d16a60c",
+      "created_at": "2026-09-03T00:06:59.545Z",
+      "type": "login",
+      "email": "quenidyyonline.17@gmail.com",
+      "display_name": "Medusaofc",
+      "role": "admin",
+      "ip": "170.231.26.243",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Mobile Safari/537.36"
+    },
+    {
       "id": "bb49ae05-13eb-4ae6-9762-18112237b040",
       "created_at": "2026-09-03T00:06:34.334Z",
       "type": "login",
