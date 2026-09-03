@@ -1,6 +1,6 @@
 {
   "name": "mythos-network-site",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Rede Mythøs — site oficial e suporte",
   "main": "server.js",
