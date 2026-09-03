@@ -82,6 +82,16 @@
   },
   "logs": [
     {
+      "id": "73e3b10f-c341-48e5-95e0-17a996810b9b",
+      "created_at": "2026-09-03T07:47:45.098Z",
+      "type": "login",
+      "email": "gamesfloriano8@gmail.com",
+      "display_name": "gamesfloriano8@gmail.com",
+      "role": "developer",
+      "ip": "179.51.180.156",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Mobile Safari/537.36"
+    },
+    {
       "id": "e330b58e-247b-4e0b-9506-c9aece6a44b7",
       "created_at": "2026-09-03T07:47:43.372Z",
       "type": "login",
