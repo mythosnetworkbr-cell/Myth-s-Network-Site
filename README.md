@@ -1,65 +1,114 @@
-# Lumis Streaming
+# Mythøs Network — Site Oficial
 
-Plataforma de streaming independente, construída sobre a base deste repositório e preparada para publicação web pela Vercel.
+Site oficial da **Mythøs Network**, reunindo a comunidade, suporte, regras e recursos do projeto.
 
-## O que já foi transformado
+## Sobre o projeto
 
-- Identidade visual **Lumis**
-- Home de streaming
-- Hero de destaque
-- Catálogo de filmes
-- Categorias
-- Em alta
-- Lançamentos
-- Ação e aventura
-- Busca
-- Detalhes de filmes
-- Minha lista
-- Perfis
-- Login/cadastro visual
-- Painel administrativo visual
-- Player preparado para receber uma fonte de vídeo licenciada
-- Layout responsivo para celular e desktop
+O repositório contém a versão web responsiva do Mythøs Network, preparada para funcionar em **celular e desktop**.
 
-## Stack atual
+### Principais áreas
 
-- React
-- Expo Web
-- TypeScript
-- React Native Web
-- Vercel para hospedagem web
+- **Início** — apresentação da rede e conteúdos em destaque.
+- **Suporte / Tickets** — abertura e acompanhamento de atendimentos.
+- **Regras** — central de regulamentos e regras completas.
+- **Painel administrativo** — gerenciamento das funções autorizadas da equipe.
+- **Candidatos** — fluxo de candidatura para Administração / Suporte.
+- **Admin Data** — dados dos administradores aprovados.
+- **Ponto** — registro de entrada, saída, horas e justificativas da equipe.
+- **Logs e histórico** — acompanhamento de acessos e atividades relevantes.
+- **APK** — área destinada à versão Android do projeto.
+- **Vídeos** — conteúdo em destaque na página inicial.
 
-## Produção
+## Equipe e permissões
 
-A interface atual usa catálogo demonstrativo e imagens de demonstração. Para operar como serviço de streaming real, a próxima camada deve conectar:
+O sistema possui uma hierarquia de cargos para separar as permissões administrativas, incluindo:
 
-1. autenticação persistente;
-2. banco de dados para catálogo e usuários;
-3. painel CRUD de filmes, séries, temporadas e episódios;
-4. armazenamento/CDN de mídia;
-5. player HLS/DASH;
-6. histórico e progresso de reprodução;
-7. perfis e controle parental;
-8. assinaturas e pagamentos;
-9. métricas de audiência;
-10. somente conteúdos que o Lumis tenha autorização/licença para distribuir.
+- Owner
+- Staff
+- ALL
+- Manager
+- Admin Líder
+- Admin 2
+- Sublíder
+- Suporte
+- Admin Assistente
+- Atendimento
 
-## Deploy Vercel
+As permissões devem ser validadas pelo backend. O painel administrativo não deve ser tratado como mecanismo de segurança isolado.
 
-O repositório mantém a configuração web existente e pode ser conectado a um projeto Vercel. O build deve usar a configuração Expo Web já existente.
+## Regras
+
+As regras oficiais ficam organizadas na central de regras e em páginas específicas quando necessário. O objetivo é preservar o conteúdo integral dos regulamentos, sem substituir as regras por resumos.
+
+## Suporte e tickets
+
+O sistema de suporte é destinado ao atendimento da comunidade. Entre as categorias utilizadas estão:
+
+- Reclamação contra Jogadores
+- Entender Punição
+- Reclamação contra Orgs
+- Reclamação Técnica
+- Marcar Ação
+- Solicitar Ajuda
+- Seja Influência
+- Candidato a Administração
+
+O fluxo de atendimento também contempla registro de atividade e notificações configuradas para a equipe.
 
 ## Desenvolvimento
 
+### Requisitos
+
+- Node.js 20 ou superior
+- npm
+
+### Instalação
+
 ```bash
 npm install
-npx expo start --web
 ```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Execução local
+
+```bash
+npm start
+```
+
+## Estrutura de publicação
+
+O projeto gera a pasta `dist` durante o build. A configuração de publicação web utiliza o `vercel.json` existente no repositório.
+
+O código-fonte permanece no GitHub e pode ser conectado ao provedor de hospedagem para implantação automática.
+
+## Segurança
+
+- Não coloque tokens, senhas, webhooks ou chaves privadas no código-fonte.
+- Credenciais de serviços externos devem permanecer nas variáveis de ambiente do provedor.
+- Rotas administrativas devem validar autenticação e autorização no servidor.
+- Arquivos enviados pelos usuários devem ser tratados com limites e validações apropriados.
 
 ## Identidade
 
-**Nome:** Lumis  
-**Tipo:** Streaming de filmes e séries  
-**Tema:** Dark / premium / roxo / preto  
-**Plataformas planejadas:** Web, Android e futuramente TV/iOS.
+**Nome:** Mythøs Network  
+**Tipo:** Plataforma web da comunidade / suporte / serviços do projeto  
+**Idioma principal:** Português (Brasil)  
+**Interface:** responsiva para celular e desktop  
+**Tema:** escuro, moderno e inspirado na identidade visual Mythøs
 
-> Este projeto não distribui filmes comerciais sem autorização. As fontes de vídeo devem ser licenciadas ou de propriedade do operador do Lumis.
+## Status
+
+Este repositório está em desenvolvimento contínuo. Funcionalidades que dependem de serviços externos — autenticação, banco de dados, armazenamento, notificações e hospedagem — precisam estar configuradas no ambiente de produção para serem consideradas operacionais.
+
+## Licença e conteúdo
+
+Os conteúdos, marcas, imagens, vídeos e demais materiais utilizados no projeto devem ser publicados somente quando houver autorização ou direito de uso correspondente.
+
+---
+
+**Mythøs Network** — Site oficial da rede.
