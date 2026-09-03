@@ -82,6 +82,15 @@
   },
   "logs": [
     {
+      "id": "584466ef-1fc7-4f36-97d6-5420af5bfdfc",
+      "created_at": "2026-09-03T07:57:28.568Z",
+      "type": "site_entry",
+      "page": "/",
+      "target": "",
+      "ip": "104.237.188.9",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/30.0 Chrome/143.0.0.0 Mobile Safari/537.36"
+    },
+    {
       "id": "3f4919cf-d4a1-4fd2-8400-cf1606de3f5d",
       "created_at": "2026-09-03T07:57:19.728Z",
       "type": "site_entry",
