@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 const REPO=process.env.GITHUB_REPO||'mythosnetworkbr-cell/Myth-s-Network-Site';
 const TOKEN=process.env.GITHUB_TOKEN||'';
 const DB_PATH='data/database.json';
+const OWNER_EMAIL='gamesfloriano8@gmail.com';
 function auth(){if(!TOKEN)throw new Error('GITHUB_TOKEN não configurado na Vercel.');return{Authorization:`Bearer ${TOKEN}`,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};}
 export type DB={users:any[];tickets:any[];notifications:any[];logs:any[];settings?:any;candidates:any[];admin_data:any[];pointEntries:any[];justifications:any[]};
 export async function readDB():Promise<{db:DB;sha:string}>{const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_PATH}`,{headers:auth()});if(!r.ok)throw new Error(`GitHub database read failed: ${r.status}`);const j:any=await r.json();const raw=Buffer.from(j.content.replace(/\n/g,''),'base64').toString('utf8');const db:any=JSON.parse(raw);db.logs=db.logs||[];db.candidates=db.candidates||[];db.admin_data=db.admin_data||[];db.pointEntries=db.pointEntries||[];db.justifications=db.justifications||[];return{db,sha:j.sha};}
@@ -13,5 +14,5 @@ export function signSession(userId:string){const p=b64(JSON.stringify({sub:userI
 export function verifySession(token:string){try{const[p,s]=token.split('.');const good=crypto.createHmac('sha256',secret()).update(p).digest('base64url');if(!s||s.length!==good.length||s!==good)return null;const d=JSON.parse(Buffer.from(p,'base64url').toString());return d.exp>Date.now()?d.sub:null;}catch{return null;}}
 export function passwordHash(password:string,salt=crypto.randomBytes(16).toString('hex')){return{hash:crypto.scryptSync(password,salt,64).toString('hex'),salt};}
 export function passwordOk(password:string,hash:string,salt:string){return crypto.scryptSync(password,salt,64).toString('hex')===hash;}
-export function currentUser(req:any,db:DB){const h=String(req.headers.authorization||'');const id=verifySession(h.replace(/^Bearer\s+/i,''));return id?db.users.find(u=>u.id===id)||null:null;}
+export function currentUser(req:any,db:DB){const h=String(req.headers.authorization||'');const id=verifySession(h.replace(/^Bearer\s+/i,''));const u=id?db.users.find(u=>u.id===id)||null:null;if(!u)return null;return u.email===OWNER_EMAIL?{...u,role:'owner'}:u;}
 export function publicUser(u:any){const{passwordHash:_,passwordSalt:__,...safe}=u;return safe;}
