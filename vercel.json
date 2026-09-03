@@ -1,16 +1,21 @@
 {
-  "$schema":"https://openapi.vercel.sh/vercel.json",
-  "buildCommand":"npm run build && cp -R dist/. .",
-  "outputDirectory":".",
-  "installCommand":"npm install",
-  "rewrites":[
-    {"source":"/suporte","destination":"/tickets.html"},
-    {"source":"/tickets","destination":"/tickets.html"},
-    {"source":"/painel-admin","destination":"/admin.html"},
-    {"source":"/admin","destination":"/admin.html"},
-    {"source":"/painel","destination":"/admin.html"},
-    {"source":"/perfil","destination":"/perfil.html"},
-    {"source":"/profile","destination":"/perfil.html"},
-    {"source":"/regras","destination":"/regras.html"}
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build && cp -R dist/. .",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    { "source": "/suporte", "destination": "/tickets.html" },
+    { "source": "/tickets", "destination": "/tickets.html" },
+    { "source": "/painel-admin", "destination": "/admin.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/painel", "destination": "/admin.html" },
+    { "source": "/perfil", "destination": "/perfil.html" },
+    { "source": "/profile", "destination": "/perfil.html" },
+    { "source": "/regras", "destination": "/regras.html" }
   ]
 }
