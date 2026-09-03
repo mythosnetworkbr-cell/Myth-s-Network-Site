@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "node full-build.js && node police-build.js"
+    "build": "node full-build.js && node police-build.js && node cargos-build.js"
   },
   "dependencies": {
     "@vercel/blob": "latest",
