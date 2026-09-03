@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@vercel/blob": "latest",
-    "@vercel/node": "latest"
+    "@vercel/node": "latest",
+    "@vercel/speed-insights": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "latest"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
