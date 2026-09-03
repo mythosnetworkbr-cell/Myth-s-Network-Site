@@ -1,11 +1,12 @@
 {
   "name": "mythos-network-site",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Rede Mythøs — site oficial e suporte",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "prebuild": "node --check full-build.js && node --check police-build.js && node --check cargos-build.js && node --check ponto-build.js && node --check desktop-build.js && node --check apk-version-build.js && node --check analytics-build.js && node --check history-build.js && node --check rejeitados-build.js",
     "build": "node full-build.js && node police-build.js && node cargos-build.js && node ponto-build.js && node desktop-build.js && node apk-version-build.js && node analytics-build.js && node history-build.js && node rejeitados-build.js"
   },
   "dependencies": {
