@@ -1,4 +1,4 @@
-import type {VercelRequest,VercelResponse> from '@vercel/node';
+import type {VercelRequest,VercelResponse} from '@vercel/node';
 import {readDB,writeDB,currentUser} from './_github';
 const videos=['https://www.youtube.com/embed/jHEZ346XUYE?autoplay=1&mute=1&controls=1&playsinline=1&rel=0&modestbranding=1','https://www.youtube.com/embed/rzGmG2K_U6k?autoplay=1&mute=1&controls=1&playsinline=1&rel=0&modestbranding=1'];
 const defaults={apkUrl:'https://github.com/mythosnetworkbr-cell/Myth-s-Network-Site/releases/latest',apkVersionName:'1.0.0',apkVersionCode:'1',discordUrl:'https://discord.com/app',storeUrl:'https://discord.com/app',supportUrl:'/suporte',videoUrl:videos[0],videoUrls:videos,logoUrl:'/assets/icon.png',iconUrl:'/assets/icon.png'};
