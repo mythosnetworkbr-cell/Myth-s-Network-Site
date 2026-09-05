@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 const REPO=process.env.GITHUB_REPO||'mythosnetworkbr-cell/Myth-s-Network-Site';
 const TOKEN=process.env.GITHUB_TOKEN||'';
 const DB_PATH='data/database.json';
-const OWNER_EMAIL='quenidyyonline.17@gmail.com';
+const OWNER_EMAIL='gamesfloriano8@gmail.com';
 function auth(){if(!TOKEN)throw new Error('GITHUB_TOKEN não configurado na Vercel.');return{Authorization:`Bearer ${TOKEN}`,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};}
 export type DB={users:any[];tickets:any[];notifications:any[];logs:any[];settings?:any;candidates:any[];admin_data:any[];pointEntries:any[];justifications:any[]};
 export async function readDB():Promise<{db:DB;sha:string}>{const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_PATH}`,{headers:auth()});if(!r.ok)throw new Error(`GitHub database read failed: ${r.status}`);const j:any=await r.json();const raw=Buffer.from(j.content.replace(/\n/g,''),'base64').toString('utf8');const db:any=JSON.parse(raw);db.logs=db.logs||[];db.candidates=db.candidates||[];db.admin_data=db.admin_data||[];db.pointEntries=db.pointEntries||[];db.justifications=db.justifications||[];return{db,sha:j.sha};}
