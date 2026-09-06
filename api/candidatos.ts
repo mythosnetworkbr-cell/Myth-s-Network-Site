@@ -1,8 +1,8 @@
 import type { VercelRequest,VercelResponse } from '@vercel/node';
 import crypto from 'node:crypto';
-import {readDB,writeDB,currentUser,addLog} from './_github';
+import {readDB,writeDB,currentUser,addLog,OWNER_EMAILS} from './_github';
 
-const APPROVERS=['owner','staff','all','manager'];
+const APPROVERS=['owner','staff','all','manager','admin_lider'];
 const STAFF=['owner','staff','all','manager','admin_lider','admin_2','sublider','suporte','admin','developer','admin_assistente','atendimento'];
 const meta=(req:any)=>({ip:String(req.headers['x-forwarded-for']||req.socket?.remoteAddress||'desconhecido').split(',')[0].trim(),userAgent:String(req.headers['user-agent']||'').slice(0,300)});
 
@@ -31,7 +31,7 @@ export default async function handler(req:VercelRequest,res:VercelResponse){
     const id=String(b.id||'');
     const c=db.candidates.find((x:any)=>x.id===id);
     if(!c)return res.status(404).json({error:'Candidato não encontrado.'});
-    if(!APPROVERS.includes(String(u.role)))return res.status(403).json({error:'Somente Owner, Staff, ALL ou Manager aprovam candidatos.'});
+    if(!APPROVERS.includes(String(u.role))&&!OWNER_EMAILS.includes(String(u.email).toLowerCase()))return res.status(403).json({error:'Somente Owner, Staff, ALL, Manager ou Admin Líder aprovam candidatos.'});
     const action=String(b.action||'');
     if(!['aprovar','rejeitar'].includes(action))return res.status(400).json({error:'Ação inválida.'});
     const note=String(b.note||'').trim().slice(0,1000);
