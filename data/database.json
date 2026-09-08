@@ -105,6 +105,15 @@
   },
   "logs": [
     {
+      "id": "f2b400ce-1c27-4330-a7d9-0fc09ef222f8",
+      "created_at": "2026-09-08T16:07:07.416Z",
+      "type": "site_entry",
+      "page": "/painel-admin",
+      "target": "",
+      "ip": "179.124.213.102",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Mobile Safari/537.36"
+    },
+    {
       "id": "ca890b47-9dd2-4d50-9e9b-a1c728e70f25",
       "created_at": "2026-09-08T15:11:58.481Z",
       "type": "site_entry",
