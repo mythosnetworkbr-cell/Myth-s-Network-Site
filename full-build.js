@@ -12,12 +12,28 @@ function parseRules(){if(!fs.existsSync(sourcePath))return[];const source=fs.rea
 function parseHospital(){if(!fs.existsSync(hospitalPath))return null;const source=fs.readFileSync(hospitalPath,'utf8');const match=source.match(/export const HOSPITAL_RULES[^=]*=\s*(\{[\s\S]*?\});/);if(!match)return null;try{return Function('return '+match[1])()}catch(e){console.error('hospital rules parse failed',e);return null}}
 function mergeHospital(data){const rules=Array.isArray(data)?data.slice():[];const hospital=parseHospital();if(!hospital)return rules;const idx=rules.findIndex(r=>/hospital|m[eé]dicos?/i.test(String(r?.title||'')));if(idx>=0){rules[idx]={...rules[idx],title:hospital.title,items:hospital.items.slice()};return rules}const nums=rules.map(r=>Number(r?.number)).filter(Number.isFinite);return [...rules,{number:String(nums.length?Math.max(...nums)+1:1),title:hospital.title,items:hospital.items.slice()}]}
 function parseBibleText(text){const clean=String(text||'').replace(/\s+/g,' ').trim();const top=/(?:>>> )?(\d+)\.\s+\*{3}([^*]+?)\*{3}\s+/g;const hits=[...clean.matchAll(top)];const sections=[];for(let i=0;i<hits.length;i++){const m=hits[i];const start=(m.index||0)+m[0].length;const end=i+1<hits.length?(hits[i+1].index||clean.length):clean.length;const chunk=clean.slice(start,end).trim();const itemRe=/(?:>>> )?•\s*(\d+\.\d+(?:\s+e\s+\d+\.\d+)?)\s*(?:\|\s*)?/g;const ih=[...chunk.matchAll(itemRe)];const items=ih.map((x,j)=>chunk.slice((x.index||0),j+1<ih.length?(ih[j+1].index||chunk.length):chunk.length).replace(/^(?:>>> )?•\s*/,'').trim()).filter(Boolean);if(items.length)sections.push({number:m[1],title:m[2].trim(),items})}return sections}
-async function loadRules(){try{const r=await fetch(BIBLE_URL,{cache:'no-store'});if(r.ok){const rules=parseBibleText(await r.text());if(rules.length){console.log('Bible RP loaded from Google Docs:',rules.length,'sections');return mergeHospital(rules)}}}catch(e){console.warn('Google Docs Bible unavailable; using repository rules.',e.message)}return mergeHospital(parseRules())}
+async function loadRules(){
+  // The repository rules are the canonical fallback. A malformed/partial Google Docs
+  // export must never replace the complete local regulation with one category.
+  const local=mergeHospital(parseRules());
+  try{
+    const r=await fetch(BIBLE_URL,{cache:'no-store'});
+    if(r.ok){
+      const remote=parseBibleText(await r.text());
+      if(remote.length>=3){
+        console.log('Bible RP loaded from Google Docs:',remote.length,'sections');
+        return mergeHospital(remote);
+      }
+      console.warn('Google Docs Bible returned only',remote.length,'section(s); keeping complete repository rules:',local.length);
+    }
+  }catch(e){console.warn('Google Docs Bible unavailable; using repository rules.',e.message)}
+  return local;
+}
 function pageShell(title,body,script=''){return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050507"><title>'+esc(title)+'</title>'+baseCss+'</head><body><main class="wrap">'+body+'</main>'+script+'</body></html>'}
 (async()=>{
 const data=await loadRules();
 if(data.length){
- let index='<header class="top"><div class="logo">REDE <span class="grad">MYTHØS</span></div><a class="back" href="/">← VOLTAR</a></header><section class="hero"><span class="eyebrow">MYTHØS · REGULAMENTO OFICIAL</span><h1>Central de <span class="grad">Regras</span></h1><p>As regras ficam separadas por página. Cada categoria abre em sua própria página, com cada regra apresentada em formato de embed para manter o texto legível e completo.</p></section><div class="list">';
+ let index='<header class="top"><div class="logo">REDE <span class="grad">MYTHØS</span></div><a class="back" href="/">← VOLTAR</a></header><section class="hero"><span class="eyebrow">MYTHØS · REGULAMENTO OFICIAL</span><h1>Central de <span class="grad">Regras</span></h1><p>Todas as categorias do regulamento ficam disponíveis aqui. Cada categoria abre sua própria página, com todas as regras e itens completos.</p></section><div class="list">';
  data.forEach((r,i)=>{index+='<a class="link" href="/regras-'+(i+1)+'.html"><strong>'+esc(r.number+'. '+r.title)+'</strong><span>'+r.items.length+' itens · Abrir página completa →</span></a>'});
  index+='</div><footer class="footer">MYTHØS NETWORK • Regulamento Oficial</footer>';
  fs.writeFileSync(rulesPath,pageShell('Mythøs • Central de Regras',index));
@@ -32,4 +48,4 @@ if(data.length){
 const adminPath=path.join(root,'dist','admin.html');
 const editorPath=path.join(root,'dist','regras-admin.js');
 if(fs.existsSync(adminPath)&&fs.existsSync(editorPath)){let a=fs.readFileSync(adminPath,'utf8');if(!a.includes('regras-admin.js')){a=a.replace('</body>','<script src="/regras-admin.js"></script></body>');fs.writeFileSync(adminPath,a)}}
-console.log('Full build: separate rule pages + embed layout + Google Docs Bible source + complete Hospital rules + live admin rules.');
+console.log('Full build: ALL local rule sections + Hospital + optional Google Docs sync + separate pages + embed layout.');
