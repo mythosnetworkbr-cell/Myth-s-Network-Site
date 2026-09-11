@@ -4,10 +4,12 @@ const dist=path.join(__dirname,'dist');
 const file=path.join(dist,'regras.html');
 if(!fs.existsSync(file))throw new Error('dist/regras.html não encontrado');
 let html=fs.readFileSync(file,'utf8');
-// The canonical Police regulation has its own page. Remove the short duplicate
-// generated inside the general Bible index and its numbered detail page.
-html=html.replace(/<a\b[^>]*href=["']\/regras-[^"']+["'][^>]*>[\s\S]*?<\/a>/gi,m=>/pol[ií]cia/i.test(m)?'':'');
+// Keep every canonical category. Police is only removed if it is a duplicate;
+// the standalone police page is generated separately by police-build.js.
+const links=[];
+html=html.replace(/<a\b[^>]*href=["']\/regras-[^"']+["'][^>]*>[\s\S]*?<\/a>/gi,m=>{if(/pol[ií]cia/i.test(m))return '';links.push(m);return m});
 html=html.replace(/\s+/g,' ').trim();
 fs.writeFileSync(file,html+'\n');
-for(const name of fs.readdirSync(dist)){if(/^regras-\d+\.html$/i.test(name)){const p=path.join(dist,name);const s=fs.readFileSync(p,'utf8');if(/Regras de Pol[ií]cia|REGULAMENTO DA POL[IÍ]CIA|Regras da Pol[ií]cia/i.test(s)){fs.unlinkSync(p);}}}
-console.log('Rules dedupe: removed duplicate Police index/detail page.');
+// Never delete normal rule pages. Only remove an unmistakable duplicate Police page.
+for(const name of fs.readdirSync(dist)){if(/^regras-\d+\.html$/i.test(name)){const p=path.join(dist,name);const s=fs.readFileSync(p,'utf8');if(/Regulamento Oficial|MYTHØS/i.test(s)&&/Regras de Pol[ií]cia|REGULAMENTO DA POL[IÍ]CIA|Regras da Pol[ií]cia/i.test(s)&&/POL[IÍ]CIA/i.test(s)){fs.unlinkSync(p);}}}
+console.log('Rules dedupe: preserved all general categories and kept Police canonical standalone.');
