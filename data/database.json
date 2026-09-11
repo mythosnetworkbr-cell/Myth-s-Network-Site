@@ -105,6 +105,15 @@
   },
   "logs": [
     {
+      "id": "99f41323-68f1-4e49-a3c3-679f73505e39",
+      "created_at": "2026-09-11T08:48:13.750Z",
+      "type": "site_entry",
+      "page": "/regras.html",
+      "target": "",
+      "ip": "66.102.8.130",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36 (compatible; Google-Read-Aloud; +https://support.google.com/webmasters/answer/1061943)"
+    },
+    {
       "id": "d26b5c05-448b-47ca-9583-4d30ed22fa7a",
       "created_at": "2026-09-11T08:48:04.753Z",
       "type": "site_entry",
