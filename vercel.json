@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data/database.json'",
   "buildCommand": "npm run build && npm run verify && cp -R dist/. .",
   "outputDirectory": ".",
   "installCommand": "npm install",
