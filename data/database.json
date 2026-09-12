@@ -105,6 +105,15 @@
   },
   "logs": [
     {
+      "id": "5b65e741-1643-4559-a4a5-8e7a885d1b51",
+      "created_at": "2026-09-12T07:45:42.146Z",
+      "type": "site_entry",
+      "page": "/regras.html",
+      "target": "",
+      "ip": "179.51.180.181",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Mobile Safari/537.36"
+    },
+    {
       "id": "1ef6bfef-f32e-43d4-9bd5-fac2370d9379",
       "created_at": "2026-09-12T01:09:08.071Z",
       "type": "site_entry",
