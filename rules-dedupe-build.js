@@ -2,14 +2,19 @@ const fs=require('fs');
 const path=require('path');
 const dist=path.join(__dirname,'dist');
 const file=path.join(dist,'regras.html');
+const localPath=path.join(__dirname,'src','data','mythos-rules.ts');
 if(!fs.existsSync(file))throw new Error('dist/regras.html não encontrado');
+const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+function readLocal(){if(!fs.existsSync(localPath))return[];const source=fs.readFileSync(localPath,'utf8');const match=source.match(/export const MYTHOS_RULES[^=]*=\s*(\[[\s\S]*?\]);/);if(!match)return[];try{return Function('return '+match[1])()}catch(e){console.warn('Não foi possível ler regras locais:',e.message);return[]}}
+function readAdditional(){try{return require('./src/data/additional-rules').ADDITIONAL_RULES||[]}catch(e){console.warn('Regras complementares indisponíveis:',e.message);return[]}}
+function pageFor(rule){const css='<style>*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#17101f,#08070b 40%,#050507);color:#f7f5fb;font-family:Inter,system-ui,sans-serif}.wrap{width:min(900px,100%);margin:auto;padding:14px}.top{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #292431}.logo{font-weight:950}.grad{background:linear-gradient(90deg,#18d9ff,#a83cff,#ff18d0);-webkit-background-clip:text;color:transparent}.back{color:#20ddf5;text-decoration:none;font-weight:900;font-size:11px}.hero{padding:28px 0 20px}.eyebrow{color:#16def4;font-size:10px;font-weight:900;letter-spacing:2px}.hero h1{font-size:clamp(30px,7vw,56px);line-height:1;margin:14px 0 10px}.hero p{color:#9995a5}.embed{position:relative;margin:12px 0;padding:16px 17px 17px 19px;border:1px solid #30283a;border-radius:12px;background:linear-gradient(180deg,#0e0b13,#0a080e);box-shadow:0 8px 25px #0005}.embed:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#18d9ff,#a83cff,#ff18d0)}.no{font-size:10px;color:#8f899b;font-weight:900;margin-bottom:7px}.text{font-size:13px;line-height:1.75;color:#dedbe4;white-space:pre-line;overflow-wrap:anywhere}.foot{border-top:1px solid #1c1921;margin-top:30px;padding:25px 0;color:#65616d;font-size:11px}</style>';const items=(rule.items||[]).map((x,i)=>'<article class="embed"><div class="no">ITEM '+String(i+1).padStart(3,'0')+'</div><div class="text">'+esc(x)+'</div></article>').join('');return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc('Mythøs • '+rule.title)+'</title>'+css+'</head><body><main class="wrap"><header class="top"><div class="logo">REDE <span class="grad">MYTHØS</span></div><a class="back" href="/regras.html">← REGRAS</a></header><section class="hero"><span class="eyebrow">MYTHØS · REGULAMENTO OFICIAL</span><h1>'+esc(rule.title)+'</h1><p>'+rule.items.length+' itens · conteúdo integral desta seção.</p></section><section>'+items+'</section><footer class="foot">MYTHØS NETWORK • Regulamento Oficial</footer></main></body></html>'}
 let html=fs.readFileSync(file,'utf8');
-// Keep every canonical category. Police is only removed if it is a duplicate;
-// the standalone police page is generated separately by police-build.js.
-const links=[];
-html=html.replace(/<a\b[^>]*href=["']\/regras-[^"']+["'][^>]*>[\s\S]*?<\/a>/gi,m=>{if(/pol[ií]cia/i.test(m))return '';links.push(m);return m});
-html=html.replace(/\s+/g,' ').trim();
-fs.writeFileSync(file,html+'\n');
-// Never delete normal rule pages. Only remove an unmistakable duplicate Police page.
-for(const name of fs.readdirSync(dist)){if(/^regras-\d+\.html$/i.test(name)){const p=path.join(dist,name);const s=fs.readFileSync(p,'utf8');if(/Regulamento Oficial|MYTHØS/i.test(s)&&/Regras de Pol[ií]cia|REGULAMENTO DA POL[IÍ]CIA|Regras da Pol[ií]cia/i.test(s)&&/POL[IÍ]CIA/i.test(s)){fs.unlinkSync(p);}}}
-console.log('Rules dedupe: preserved all general categories and kept Police canonical standalone.');
+html=html.replace(/<a\b[^>]*href=["']\/regras-[^"']+["'][^>]*>[\s\S]*?<\/a>/gi,m=>/pol[ií]cia/i.test(m)?'':m);
+const existingTitles=new Set([...html.matchAll(/<a\b[^>]*href=["']\/regras-\d+\.html["'][^>]*>\s*<strong>([\s\S]*?)<\/strong>/gi)].map(m=>m[1].replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').trim().toLocaleLowerCase('pt-BR')));
+const local=[...readLocal(),...readAdditional()];
+let next=([...html.matchAll(/href=["']\/regras-(\d+)\.html/gi)].map(m=>Number(m[1])).filter(Number.isFinite).reduce((a,b)=>Math.max(a,b),0)||0)+1;
+let additions='';
+for(const rule of local){if(!rule||!rule.title||/pol[ií]cia/i.test(String(rule.title)))continue;const key=String(rule.title).trim().toLocaleLowerCase('pt-BR');if(existingTitles.has(key))continue;const n=next++;additions+='<a class="link" href="/regras-'+n+'.html"><strong>'+esc(String(rule.number||n)+'. '+rule.title)+'</strong><span>'+rule.items.length+' itens · Abrir página completa →</span></a>';fs.writeFileSync(path.join(dist,'regras-'+n+'.html'),pageFor(rule));existingTitles.add(key)}
+if(additions){const marker='</div><footer class="footer">';if(html.includes(marker))html=html.replace(marker,additions+marker);else{const pos=html.lastIndexOf('</main>');html=html.slice(0,pos)+additions+html.slice(pos)}}
+html=html.replace(/\s+/g,' ').trim();fs.writeFileSync(file,html+'\n');
+console.log('Rules: Bíblia RP preservada; categorias complementares adicionadas: Códigos Q, Alfabeto Fonético, Rádio e Atendimento Médico/SAMU.');
