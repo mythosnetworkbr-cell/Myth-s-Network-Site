@@ -1,0 +1,106 @@
+const ADDITIONAL_RULES = [
+  {
+    number: '5',
+    title: 'CÓDIGOS Q — COMUNICAÇÃO OPERACIONAL',
+    items: [
+      'QAP — Na escuta / aguardando comunicação.',
+      'QRA — Identificação ou nome do operador.',
+      'QRB — Distância aproximada entre as unidades.',
+      'QRF — Retorno à base ou local de origem.',
+      'QRL — Estou ocupado / não posso atender no momento.',
+      'QRM — Interferência ou ruído na comunicação.',
+      'QRN — Interferência causada por ruído externo.',
+      'QRO — Aumentar a potência do rádio, quando tecnicamente disponível.',
+      'QRP — Reduzir a potência do rádio, quando tecnicamente disponível.',
+      'QRQ — Transmita mais rapidamente.',
+      'QRS — Transmita mais devagar.',
+      'QRT — Encerrar a transmissão / desligar a comunicação.',
+      'QRU — Há alguma mensagem ou ocorrência para mim?',
+      'QRV — Estou pronto / disponível.',
+      'QRX — Aguarde e mantenha-se na escuta.',
+      'QRY — Informe a ordem ou prioridade da comunicação.',
+      'QRZ — Quem está chamando?',
+      'QSA — Qual a intensidade do meu sinal?',
+      'QSB — Seu sinal está oscilando.',
+      'QSL — Mensagem recebida e compreendida.',
+      'QSM — Repita a última mensagem.',
+      'QSO — Comunicação ou contato entre operadores.',
+      'QSP — Faça a retransmissão da mensagem para outra unidade.',
+      'QSY — Mudar de frequência ou canal.',
+      'QTA — Cancele a mensagem ou informação anterior.',
+      'QTC — Mensagem, ocorrência ou informação a transmitir.',
+      'QTH — Localização atual da unidade.',
+      'QTR — Horário atual ou horário informado pela central.',
+      'QTU — Horário de funcionamento ou disponibilidade de uma estação.',
+      'QTX — Permaneça disponível para nova comunicação.',
+      'Regra de rádio: mantenha objetividade, identifique a unidade quando necessário e não interrompa comunicações prioritárias.',
+      'Regra de rádio: chamadas de emergência, perseguições, operações e pedidos de apoio têm prioridade sobre conversas administrativas ou assuntos particulares.'
+    ]
+  },
+  {
+    number: '6',
+    title: 'ALFABETO FONÉTICO — PADRÃO DE RÁDIO',
+    items: [
+      'A — Alfa.',
+      'B — Bravo.',
+      'C — Charlie.',
+      'D — Delta.',
+      'E — Echo.',
+      'F — Foxtrot.',
+      'G — Golf.',
+      'H — Hotel.',
+      'I — India.',
+      'J — Juliett.',
+      'K — Kilo.',
+      'L — Lima.',
+      'M — Mike.',
+      'N — November.',
+      'O — Oscar.',
+      'P — Papa.',
+      'Q — Quebec.',
+      'R — Romeo.',
+      'S — Sierra.',
+      'T — Tango.',
+      'U — Uniform.',
+      'V — Victor.',
+      'W — Whiskey.',
+      'X — X-ray.',
+      'Y — Yankee.',
+      'Z — Zulu.',
+      'O alfabeto fonético deve ser utilizado para soletrar nomes, placas, códigos, identificadores e informações que possam gerar dúvida na comunicação.',
+      'Ao soletrar uma informação, transmita letra por letra de forma clara e aguarde confirmação quando a informação for operacionalmente importante.'
+    ]
+  },
+  {
+    number: '7',
+    title: 'REGRAS DE RÁDIO E COMUNICAÇÃO',
+    items: [
+      'O rádio é destinado à comunicação operacional e deve permanecer livre de conversas desnecessárias durante ocorrências.',
+      'É proibido floodar, gritar, reproduzir sons ou utilizar microfone de forma que prejudique a comunicação da equipe.',
+      'Durante uma ocorrência de alta prioridade, comunicações secundárias devem aguardar a liberação do canal.',
+      'Unidades em perseguição devem informar situação, localização aproximada e necessidade de apoio de forma objetiva.',
+      'Pedidos de apoio devem informar quem solicita, onde está e qual é a natureza da ocorrência.',
+      'Não utilize o rádio operacional para discussões pessoais, provocações, comércio ou assuntos sem relação com o serviço.',
+      'Não divulgue informações internas, estratégias ou dados sensíveis para pessoas que não participam da operação.',
+      'Em caso de falha de comunicação, tente repetir a mensagem de forma curta e utilize o canal ou procedimento alternativo definido pela organização.',
+      'O operador deve respeitar a cadeia de comando e as prioridades de comunicação estabelecidas para sua organização.'
+    ]
+  },
+  {
+    number: '8',
+    title: 'REGRAS DE ATENDIMENTO MÉDICO E SAMU',
+    items: [
+      'O atendimento médico deve priorizar preservação da vida, segurança da cena e interpretação coerente com o Roleplay.',
+      'O médico deve avaliar a situação antes de iniciar o atendimento e solicitar apoio quando a cena oferecer risco.',
+      'É proibido realizar atendimento de forma instantânea ou sem interpretação quando a situação exigir procedimento RP.',
+      'Pacientes devem interpretar ferimentos, dor, inconsciência e recuperação de maneira compatível com a gravidade da ocorrência.',
+      'Após reanimação ou atendimento, o paciente deve respeitar as orientações e o período de recuperação estabelecido pela equipe médica.',
+      'É proibido utilizar ambulância ou veículo médico para fins pessoais, fuga de ações ou deslocamentos sem relação com o serviço.',
+      'A equipe médica deve manter postura profissional, respeitar pacientes e preservar informações obtidas durante atendimentos.',
+      'Em locais com risco ativo, a equipe médica pode aguardar a segurança da área antes de entrar em cena.',
+      'É proibido impedir deliberadamente o deslocamento de ambulâncias ou paramédicos que estejam em atendimento legítimo.',
+      'Casos de conflito entre atendimento médico e segurança pública devem ser conduzidos de forma coordenada, preservando o Roleplay e a integridade dos envolvidos.'
+    ]
+  }
+];
+module.exports = { ADDITIONAL_RULES };
