@@ -1,114 +1,99 @@
-# Mythøs Network — Site Oficial
+# LÜMYS — Plataforma de Livros
 
-Site oficial da **Mythøs Network**, reunindo a comunidade, suporte, regras e recursos do projeto.
+A **LÜMYS** é a nova identidade deste projeto: uma plataforma digital focada em **descobrir, comprar, ler e publicar livros**.
 
-## Sobre o projeto
+## Proposta
 
-O repositório contém a versão web responsiva do Mythøs Network, preparada para funcionar em **celular e desktop**.
+A experiência combina vitrine editorial, biblioteca pessoal e leitor digital em uma interface responsiva para celular, tablet e desktop.
 
 ### Principais áreas
 
-- **Início** — apresentação da rede e conteúdos em destaque.
-- **Suporte / Tickets** — abertura e acompanhamento de atendimentos.
-- **Regras** — central de regulamentos e regras completas.
-- **Painel administrativo** — gerenciamento das funções autorizadas da equipe.
-- **Candidatos** — fluxo de candidatura para Administração / Suporte.
-- **Admin Data** — dados dos administradores aprovados.
-- **Ponto** — registro de entrada, saída, horas e justificativas da equipe.
-- **Logs e histórico** — acompanhamento de acessos e atividades relevantes.
-- **APK** — área destinada à versão Android do projeto.
-- **Vídeos** — conteúdo em destaque na página inicial.
+- **Início** — destaques, lançamentos e descoberta de novas histórias.
+- **Catálogo** — livros organizados por gênero e pesquisa.
+- **Detalhes do livro** — capa, autor, sinopse, avaliação, preço e amostra.
+- **Biblioteca** — livros adicionados pelo leitor e progresso de leitura.
+- **Leitor** — modo de leitura com ajuste de tamanho e tema.
+- **Autores** — apresentação da proposta de publicação independente.
+- **Publicar** — formulário para submissão de novas obras.
+- **Conta** — ponto de entrada para futura autenticação e sincronização.
 
-## Equipe e permissões
+## Identidade visual
 
-O sistema possui uma hierarquia de cargos para separar as permissões administrativas, incluindo:
+A nova interface abandona a identidade de roleplay da antiga versão e adota uma estética editorial contemporânea:
 
-- Owner
-- Staff
-- ALL
-- Manager
-- Admin Líder
-- Admin 2
-- Sublíder
-- Suporte
-- Admin Assistente
-- Atendimento
+- fundo escuro sofisticado;
+- tipografia serifada para títulos;
+- dourado editorial como cor de destaque;
+- detalhes violeta;
+- capas de livros em destaque;
+- glassmorphism discreto;
+- navegação responsiva e barra inferior no celular.
 
-As permissões devem ser validadas pelo backend. O painel administrativo não deve ser tratado como mecanismo de segurança isolado.
+## Funcionalidades da versão atual
 
-## Regras
+- Busca por título, autor e gênero.
+- Filtros por categoria.
+- Catálogo com livros demonstrativos.
+- Página/modal de detalhes.
+- Amostra de leitura.
+- Biblioteca local com `localStorage`.
+- Fluxo visual de compra e adição à biblioteca.
+- Formulário de publicação de obras.
+- Cadastro local de e-mail para preparar a experiência de conta.
+- Layout responsivo para mobile e desktop.
 
-As regras oficiais ficam organizadas na central de regras e em páginas específicas quando necessário. O objetivo é preservar o conteúdo integral dos regulamentos, sem substituir as regras por resumos.
+> A compra exibida nesta primeira versão é um fluxo de demonstração: o processamento financeiro real, DRM, distribuição de arquivos, royalties e sincronização em nuvem ainda precisam ser conectados ao backend e ao provedor de pagamentos escolhido.
 
-## Suporte e tickets
-
-O sistema de suporte é destinado ao atendimento da comunidade. Entre as categorias utilizadas estão:
-
-- Reclamação contra Jogadores
-- Entender Punição
-- Reclamação contra Orgs
-- Reclamação Técnica
-- Marcar Ação
-- Solicitar Ajuda
-- Seja Influência
-- Candidato a Administração
-
-O fluxo de atendimento também contempla registro de atividade e notificações configuradas para a equipe.
-
-## Desenvolvimento
+## Build e publicação
 
 ### Requisitos
 
 - Node.js 20 ou superior
 - npm
 
-### Instalação
-
-```bash
-npm install
-```
-
 ### Build
 
 ```bash
+npm install
 npm run build
 ```
 
-### Execução local
+O build executa `lumys-build.js` e aplica o hotfix do catálogo antes da publicação.
 
-```bash
-npm start
-```
+### Vercel
 
-## Estrutura de publicação
+O projeto está configurado para publicação automática pela Vercel a partir da branch `main`.
 
-O projeto gera a pasta `dist` durante o build. A configuração de publicação web utiliza o `vercel.json` existente no repositório.
+## Próxima camada de produto
 
-O código-fonte permanece no GitHub e pode ser conectado ao provedor de hospedagem para implantação automática.
+A arquitetura visual já está preparada para receber:
+
+- autenticação real;
+- banco de dados de livros e autores;
+- upload de EPUB/PDF;
+- leitor EPUB protegido;
+- pagamentos reais;
+- biblioteca sincronizada entre dispositivos;
+- favoritos e listas;
+- avaliações e resenhas;
+- painel do autor;
+- royalties e relatórios;
+- moderação editorial;
+- audiobooks;
+- notificações e recomendações.
 
 ## Segurança
 
-- Não coloque tokens, senhas, webhooks ou chaves privadas no código-fonte.
-- Credenciais de serviços externos devem permanecer nas variáveis de ambiente do provedor.
-- Rotas administrativas devem validar autenticação e autorização no servidor.
-- Arquivos enviados pelos usuários devem ser tratados com limites e validações apropriados.
+Credenciais, tokens, chaves de pagamento e segredos de backend devem permanecer exclusivamente nas variáveis de ambiente da hospedagem.
 
 ## Identidade
 
-**Nome:** Mythøs Network  
-**Tipo:** Plataforma web da comunidade / suporte / serviços do projeto  
+**Nome:** LÜMYS  
+**Categoria:** Plataforma de livros digitais  
 **Idioma principal:** Português (Brasil)  
-**Interface:** responsiva para celular e desktop  
-**Tema:** escuro, moderno e inspirado na identidade visual Mythøs
-
-## Status
-
-Este repositório está em desenvolvimento contínuo. Funcionalidades que dependem de serviços externos — autenticação, banco de dados, armazenamento, notificações e hospedagem — precisam estar configuradas no ambiente de produção para serem consideradas operacionais.
-
-## Licença e conteúdo
-
-Os conteúdos, marcas, imagens, vídeos e demais materiais utilizados no projeto devem ser publicados somente quando houver autorização ou direito de uso correspondente.
+**Experiência:** descobrir · comprar · ler · publicar  
+**Status:** nova fase do projeto
 
 ---
 
-**Mythøs Network** — Site oficial da rede.
+**LÜMYS** — uma nova casa para histórias.
