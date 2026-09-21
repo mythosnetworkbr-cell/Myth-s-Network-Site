@@ -1,22 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data/database.json'",
-  "buildCommand": "npm run build && npm run verify && cp -R dist/. .",
-  "outputDirectory": ".",
   "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
   "functions": {
     "api/**/*.ts": {
       "maxDuration": 60
     }
   },
   "rewrites": [
-    { "source": "/suporte", "destination": "/tickets.html" },
-    { "source": "/tickets", "destination": "/tickets.html" },
-    { "source": "/painel-admin", "destination": "/admin.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/painel", "destination": "/admin.html" },
-    { "source": "/perfil", "destination": "/perfil.html" },
-    { "source": "/profile", "destination": "/perfil.html" },
-    { "source": "/regras", "destination": "/regras.html" }
+    { "source": "/catalogo", "destination": "/index.html" },
+    { "source": "/livros", "destination": "/index.html" },
+    { "source": "/biblioteca", "destination": "/index.html" },
+    { "source": "/autores", "destination": "/index.html" },
+    { "source": "/publicar", "destination": "/index.html" },
+    { "source": "/ler", "destination": "/index.html" },
+    { "source": "/perfil", "destination": "/index.html" },
+    { "source": "/conta", "destination": "/index.html" }
   ]
 }
