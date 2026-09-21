@@ -1,14 +1,14 @@
 {
   "name": "lumys-books",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "description": "LÜMYS — plataforma de livros, leitura digital e publicação",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "prebuild": "node --check lumys-build.js && node --check lumys-hotfix.js",
-    "build": "node lumys-build.js && node lumys-hotfix.js",
-    "verify": "node --check lumys-build.js && node --check lumys-hotfix.js"
+    "prebuild": "node --check lumys-build.js && node --check lumys-hotfix.js && node --check lumys-neon.js",
+    "build": "node lumys-build.js && node lumys-hotfix.js && node lumys-neon.js",
+    "verify": "node --check lumys-build.js && node --check lumys-hotfix.js && node --check lumys-neon.js"
   },
   "dependencies": {
     "@vercel/blob": "latest",
